@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net462;net8.0</TargetFrameworks>
-    <LangVersion>9.0</LangVersion>
-	  <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>default</LangVersion>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <!-- nuget stuff -->
   <PropertyGroup>
     <Title>StreamDeckSharp</Title>
-    <Version>7.0.0</Version>
+    <Version>10.0.0</Version>
     <Description>A simple .NET wrapper for StreamDeck (using OpenMacroBoard.SDK)</Description>
     <RepositoryUrl>https://github.com/OpenMacroBoard/StreamDeckSharp</RepositoryUrl>
   </PropertyGroup>
@@ -19,8 +19,12 @@
 
   <ItemGroup>
     <PackageReference Include="HidSharp" Version="2.6.4" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.13" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
     <ProjectReference Include="..\..\..\OpenMacroBoard.SDK\src\OpenMacroBoard.SDK\OpenMacroBoard.SDK.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="" />
     <None Include="icon.png" Pack="true" PackagePath="" />
   </ItemGroup>
 

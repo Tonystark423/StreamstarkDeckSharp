@@ -12,8 +12,8 @@ namespace StreamDeckSharp.Internals
         private const int ImgWidth = 72;
         private const int ColorChannels = 3;
 
-        private static readonly byte[] BmpHeader = new byte[]
-        {
+        private static readonly byte[] BmpHeader =
+        [
             0x42, 0x4d, 0xf6, 0x3c, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x36, 0x00, 0x00, 0x00, 0x28, 0x00,
             0x00, 0x00, 0x48, 0x00, 0x00, 0x00, 0x48, 0x00,
@@ -21,7 +21,7 @@ namespace StreamDeckSharp.Internals
             0x00, 0x00, 0xc0, 0x3c, 0x00, 0x00, 0xc4, 0x0e,
             0x00, 0x00, 0xc4, 0x0e, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        };
+        ];
 
         /// <inheritdoc/>
         public int HeaderSize => 16;
@@ -133,7 +133,7 @@ namespace StreamDeckSharp.Internals
         /// <inheritdoc/>
         public byte[] GetLogoMessage()
         {
-            return new byte[] { 0x0B, 0x63 };
+            return [0x0B, 0x63];
         }
 
         /// <inheritdoc/>

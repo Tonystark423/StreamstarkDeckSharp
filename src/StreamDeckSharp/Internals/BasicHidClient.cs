@@ -8,7 +8,7 @@ namespace StreamDeckSharp.Internals
     internal class BasicHidClient : IMacroBoard
     {
         private readonly byte[] keyStates;
-        private readonly object disposeLock = new();
+        private readonly Lock disposeLock = new();
 
         public BasicHidClient(
             IStreamDeckHid deckHid,

@@ -1,704 +1,704 @@
 ﻿{
-  DeviceName: Stream Deck XL,
-  Driver: {
-    BytesPerSecondLimit: Infinity,
-    ExpectedFeatureReportLength: 32,
-    ExpectedInputReportLength: 512,
-    ExpectedOutputReportLength: 1024,
-    FirmwareVersionFeatureId: 5,
-    FirmwareVersionReportSkip: 6,
-    HeaderSize: 8,
-    KeyReportOffset: 4,
-    ReportSize: 1024,
-    SerialNumberFeatureId: 6,
-    SerialNumberReportSkip: 2
-  },
-  Keys: [
-    {
-      Bottom: 96,
-      Height: 96,
-      IsEmpty: false,
-      Left: 0,
-      Location: {
-        IsEmpty: true,
-        X: 0,
-        Y: 0
-      },
-      Right: 96,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 0,
-      Width: 96,
-      X: 0,
-      Y: 0
-    },
-    {
-      Bottom: 96,
-      Height: 96,
-      IsEmpty: false,
-      Left: 134,
-      Location: {
-        IsEmpty: false,
-        X: 134,
-        Y: 0
-      },
-      Right: 230,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 0,
-      Width: 96,
-      X: 134,
-      Y: 0
-    },
-    {
-      Bottom: 96,
-      Height: 96,
-      IsEmpty: false,
-      Left: 268,
-      Location: {
-        IsEmpty: false,
-        X: 268,
-        Y: 0
-      },
-      Right: 364,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 0,
-      Width: 96,
-      X: 268,
-      Y: 0
-    },
-    {
-      Bottom: 96,
-      Height: 96,
-      IsEmpty: false,
-      Left: 402,
-      Location: {
-        IsEmpty: false,
-        X: 402,
-        Y: 0
-      },
-      Right: 498,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 0,
-      Width: 96,
-      X: 402,
-      Y: 0
-    },
-    {
-      Bottom: 96,
-      Height: 96,
-      IsEmpty: false,
-      Left: 536,
-      Location: {
-        IsEmpty: false,
-        X: 536,
-        Y: 0
-      },
-      Right: 632,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 0,
-      Width: 96,
-      X: 536,
-      Y: 0
-    },
-    {
-      Bottom: 96,
-      Height: 96,
-      IsEmpty: false,
-      Left: 670,
-      Location: {
-        IsEmpty: false,
-        X: 670,
-        Y: 0
-      },
-      Right: 766,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 0,
-      Width: 96,
-      X: 670,
-      Y: 0
-    },
-    {
-      Bottom: 96,
-      Height: 96,
-      IsEmpty: false,
-      Left: 804,
-      Location: {
-        IsEmpty: false,
-        X: 804,
-        Y: 0
-      },
-      Right: 900,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 0,
-      Width: 96,
-      X: 804,
-      Y: 0
-    },
-    {
-      Bottom: 96,
-      Height: 96,
-      IsEmpty: false,
-      Left: 938,
-      Location: {
-        IsEmpty: false,
-        X: 938,
-        Y: 0
-      },
-      Right: 1034,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 0,
-      Width: 96,
-      X: 938,
-      Y: 0
-    },
-    {
-      Bottom: 230,
-      Height: 96,
-      IsEmpty: false,
-      Left: 0,
-      Location: {
-        IsEmpty: false,
-        X: 0,
-        Y: 134
-      },
-      Right: 96,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 134,
-      Width: 96,
-      X: 0,
-      Y: 134
-    },
-    {
-      Bottom: 230,
-      Height: 96,
-      IsEmpty: false,
-      Left: 134,
-      Location: {
-        IsEmpty: false,
-        X: 134,
-        Y: 134
-      },
-      Right: 230,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 134,
-      Width: 96,
-      X: 134,
-      Y: 134
-    },
-    {
-      Bottom: 230,
-      Height: 96,
-      IsEmpty: false,
-      Left: 268,
-      Location: {
-        IsEmpty: false,
-        X: 268,
-        Y: 134
-      },
-      Right: 364,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 134,
-      Width: 96,
-      X: 268,
-      Y: 134
-    },
-    {
-      Bottom: 230,
-      Height: 96,
-      IsEmpty: false,
-      Left: 402,
-      Location: {
-        IsEmpty: false,
-        X: 402,
-        Y: 134
-      },
-      Right: 498,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 134,
-      Width: 96,
-      X: 402,
-      Y: 134
-    },
-    {
-      Bottom: 230,
-      Height: 96,
-      IsEmpty: false,
-      Left: 536,
-      Location: {
-        IsEmpty: false,
-        X: 536,
-        Y: 134
-      },
-      Right: 632,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 134,
-      Width: 96,
-      X: 536,
-      Y: 134
-    },
-    {
-      Bottom: 230,
-      Height: 96,
-      IsEmpty: false,
-      Left: 670,
-      Location: {
-        IsEmpty: false,
-        X: 670,
-        Y: 134
-      },
-      Right: 766,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 134,
-      Width: 96,
-      X: 670,
-      Y: 134
-    },
-    {
-      Bottom: 230,
-      Height: 96,
-      IsEmpty: false,
-      Left: 804,
-      Location: {
-        IsEmpty: false,
-        X: 804,
-        Y: 134
-      },
-      Right: 900,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 134,
-      Width: 96,
-      X: 804,
-      Y: 134
-    },
-    {
-      Bottom: 230,
-      Height: 96,
-      IsEmpty: false,
-      Left: 938,
-      Location: {
-        IsEmpty: false,
-        X: 938,
-        Y: 134
-      },
-      Right: 1034,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 134,
-      Width: 96,
-      X: 938,
-      Y: 134
-    },
-    {
-      Bottom: 364,
-      Height: 96,
-      IsEmpty: false,
-      Left: 0,
-      Location: {
-        IsEmpty: false,
-        X: 0,
-        Y: 268
-      },
-      Right: 96,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 268,
-      Width: 96,
-      X: 0,
-      Y: 268
-    },
-    {
-      Bottom: 364,
-      Height: 96,
-      IsEmpty: false,
-      Left: 134,
-      Location: {
-        IsEmpty: false,
-        X: 134,
-        Y: 268
-      },
-      Right: 230,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 268,
-      Width: 96,
-      X: 134,
-      Y: 268
-    },
-    {
-      Bottom: 364,
-      Height: 96,
-      IsEmpty: false,
-      Left: 268,
-      Location: {
-        IsEmpty: false,
-        X: 268,
-        Y: 268
-      },
-      Right: 364,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 268,
-      Width: 96,
-      X: 268,
-      Y: 268
-    },
-    {
-      Bottom: 364,
-      Height: 96,
-      IsEmpty: false,
-      Left: 402,
-      Location: {
-        IsEmpty: false,
-        X: 402,
-        Y: 268
-      },
-      Right: 498,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 268,
-      Width: 96,
-      X: 402,
-      Y: 268
-    },
-    {
-      Bottom: 364,
-      Height: 96,
-      IsEmpty: false,
-      Left: 536,
-      Location: {
-        IsEmpty: false,
-        X: 536,
-        Y: 268
-      },
-      Right: 632,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 268,
-      Width: 96,
-      X: 536,
-      Y: 268
-    },
-    {
-      Bottom: 364,
-      Height: 96,
-      IsEmpty: false,
-      Left: 670,
-      Location: {
-        IsEmpty: false,
-        X: 670,
-        Y: 268
-      },
-      Right: 766,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 268,
-      Width: 96,
-      X: 670,
-      Y: 268
-    },
-    {
-      Bottom: 364,
-      Height: 96,
-      IsEmpty: false,
-      Left: 804,
-      Location: {
-        IsEmpty: false,
-        X: 804,
-        Y: 268
-      },
-      Right: 900,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 268,
-      Width: 96,
-      X: 804,
-      Y: 268
-    },
-    {
-      Bottom: 364,
-      Height: 96,
-      IsEmpty: false,
-      Left: 938,
-      Location: {
-        IsEmpty: false,
-        X: 938,
-        Y: 268
-      },
-      Right: 1034,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 268,
-      Width: 96,
-      X: 938,
-      Y: 268
-    },
-    {
-      Bottom: 498,
-      Height: 96,
-      IsEmpty: false,
-      Left: 0,
-      Location: {
-        IsEmpty: false,
-        X: 0,
-        Y: 402
-      },
-      Right: 96,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 402,
-      Width: 96,
-      X: 0,
-      Y: 402
-    },
-    {
-      Bottom: 498,
-      Height: 96,
-      IsEmpty: false,
-      Left: 134,
-      Location: {
-        IsEmpty: false,
-        X: 134,
-        Y: 402
-      },
-      Right: 230,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 402,
-      Width: 96,
-      X: 134,
-      Y: 402
-    },
-    {
-      Bottom: 498,
-      Height: 96,
-      IsEmpty: false,
-      Left: 268,
-      Location: {
-        IsEmpty: false,
-        X: 268,
-        Y: 402
-      },
-      Right: 364,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 402,
-      Width: 96,
-      X: 268,
-      Y: 402
-    },
-    {
-      Bottom: 498,
-      Height: 96,
-      IsEmpty: false,
-      Left: 402,
-      Location: {
-        IsEmpty: false,
-        X: 402,
-        Y: 402
-      },
-      Right: 498,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 402,
-      Width: 96,
-      X: 402,
-      Y: 402
-    },
-    {
-      Bottom: 498,
-      Height: 96,
-      IsEmpty: false,
-      Left: 536,
-      Location: {
-        IsEmpty: false,
-        X: 536,
-        Y: 402
-      },
-      Right: 632,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 402,
-      Width: 96,
-      X: 536,
-      Y: 402
-    },
-    {
-      Bottom: 498,
-      Height: 96,
-      IsEmpty: false,
-      Left: 670,
-      Location: {
-        IsEmpty: false,
-        X: 670,
-        Y: 402
-      },
-      Right: 766,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 402,
-      Width: 96,
-      X: 670,
-      Y: 402
-    },
-    {
-      Bottom: 498,
-      Height: 96,
-      IsEmpty: false,
-      Left: 804,
-      Location: {
-        IsEmpty: false,
-        X: 804,
-        Y: 402
-      },
-      Right: 900,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 402,
-      Width: 96,
-      X: 804,
-      Y: 402
-    },
-    {
-      Bottom: 498,
-      Height: 96,
-      IsEmpty: false,
-      Left: 938,
-      Location: {
-        IsEmpty: false,
-        X: 938,
-        Y: 402
-      },
-      Right: 1034,
-      Size: {
-        Height: 96,
-        IsEmpty: false,
-        Width: 96
-      },
-      Top: 402,
-      Width: 96,
-      X: 938,
-      Y: 402
-    }
-  ],
   UsbIds: [
     {
-      UsbProductId: 108,
-      UsbVendorId: 4057
+      UsbVendorId: 4057,
+      UsbProductId: 108
     },
     {
-      UsbProductId: 143,
-      UsbVendorId: 4057
+      UsbVendorId: 4057,
+      UsbProductId: 143
     },
     {
-      UsbProductId: 186,
-      UsbVendorId: 4057
+      UsbVendorId: 4057,
+      UsbProductId: 186
     }
-  ]
+  ],
+  DeviceName: Stream Deck XL,
+  Keys: [
+    {
+      X: 0,
+      Y: 0,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 0,
+        Y: 0,
+        IsEmpty: true
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 0,
+      Right: 96,
+      Bottom: 96,
+      Left: 0
+    },
+    {
+      X: 134,
+      Y: 0,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 134,
+        Y: 0,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 0,
+      Right: 230,
+      Bottom: 96,
+      Left: 134
+    },
+    {
+      X: 268,
+      Y: 0,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 268,
+        Y: 0,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 0,
+      Right: 364,
+      Bottom: 96,
+      Left: 268
+    },
+    {
+      X: 402,
+      Y: 0,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 402,
+        Y: 0,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 0,
+      Right: 498,
+      Bottom: 96,
+      Left: 402
+    },
+    {
+      X: 536,
+      Y: 0,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 536,
+        Y: 0,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 0,
+      Right: 632,
+      Bottom: 96,
+      Left: 536
+    },
+    {
+      X: 670,
+      Y: 0,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 670,
+        Y: 0,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 0,
+      Right: 766,
+      Bottom: 96,
+      Left: 670
+    },
+    {
+      X: 804,
+      Y: 0,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 804,
+        Y: 0,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 0,
+      Right: 900,
+      Bottom: 96,
+      Left: 804
+    },
+    {
+      X: 938,
+      Y: 0,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 938,
+        Y: 0,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 0,
+      Right: 1034,
+      Bottom: 96,
+      Left: 938
+    },
+    {
+      X: 0,
+      Y: 134,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 0,
+        Y: 134,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 134,
+      Right: 96,
+      Bottom: 230,
+      Left: 0
+    },
+    {
+      X: 134,
+      Y: 134,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 134,
+        Y: 134,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 134,
+      Right: 230,
+      Bottom: 230,
+      Left: 134
+    },
+    {
+      X: 268,
+      Y: 134,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 268,
+        Y: 134,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 134,
+      Right: 364,
+      Bottom: 230,
+      Left: 268
+    },
+    {
+      X: 402,
+      Y: 134,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 402,
+        Y: 134,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 134,
+      Right: 498,
+      Bottom: 230,
+      Left: 402
+    },
+    {
+      X: 536,
+      Y: 134,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 536,
+        Y: 134,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 134,
+      Right: 632,
+      Bottom: 230,
+      Left: 536
+    },
+    {
+      X: 670,
+      Y: 134,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 670,
+        Y: 134,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 134,
+      Right: 766,
+      Bottom: 230,
+      Left: 670
+    },
+    {
+      X: 804,
+      Y: 134,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 804,
+        Y: 134,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 134,
+      Right: 900,
+      Bottom: 230,
+      Left: 804
+    },
+    {
+      X: 938,
+      Y: 134,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 938,
+        Y: 134,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 134,
+      Right: 1034,
+      Bottom: 230,
+      Left: 938
+    },
+    {
+      X: 0,
+      Y: 268,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 0,
+        Y: 268,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 268,
+      Right: 96,
+      Bottom: 364,
+      Left: 0
+    },
+    {
+      X: 134,
+      Y: 268,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 134,
+        Y: 268,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 268,
+      Right: 230,
+      Bottom: 364,
+      Left: 134
+    },
+    {
+      X: 268,
+      Y: 268,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 268,
+        Y: 268,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 268,
+      Right: 364,
+      Bottom: 364,
+      Left: 268
+    },
+    {
+      X: 402,
+      Y: 268,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 402,
+        Y: 268,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 268,
+      Right: 498,
+      Bottom: 364,
+      Left: 402
+    },
+    {
+      X: 536,
+      Y: 268,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 536,
+        Y: 268,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 268,
+      Right: 632,
+      Bottom: 364,
+      Left: 536
+    },
+    {
+      X: 670,
+      Y: 268,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 670,
+        Y: 268,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 268,
+      Right: 766,
+      Bottom: 364,
+      Left: 670
+    },
+    {
+      X: 804,
+      Y: 268,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 804,
+        Y: 268,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 268,
+      Right: 900,
+      Bottom: 364,
+      Left: 804
+    },
+    {
+      X: 938,
+      Y: 268,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 938,
+        Y: 268,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 268,
+      Right: 1034,
+      Bottom: 364,
+      Left: 938
+    },
+    {
+      X: 0,
+      Y: 402,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 0,
+        Y: 402,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 402,
+      Right: 96,
+      Bottom: 498,
+      Left: 0
+    },
+    {
+      X: 134,
+      Y: 402,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 134,
+        Y: 402,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 402,
+      Right: 230,
+      Bottom: 498,
+      Left: 134
+    },
+    {
+      X: 268,
+      Y: 402,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 268,
+        Y: 402,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 402,
+      Right: 364,
+      Bottom: 498,
+      Left: 268
+    },
+    {
+      X: 402,
+      Y: 402,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 402,
+        Y: 402,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 402,
+      Right: 498,
+      Bottom: 498,
+      Left: 402
+    },
+    {
+      X: 536,
+      Y: 402,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 536,
+        Y: 402,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 402,
+      Right: 632,
+      Bottom: 498,
+      Left: 536
+    },
+    {
+      X: 670,
+      Y: 402,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 670,
+        Y: 402,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 402,
+      Right: 766,
+      Bottom: 498,
+      Left: 670
+    },
+    {
+      X: 804,
+      Y: 402,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 804,
+        Y: 402,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 402,
+      Right: 900,
+      Bottom: 498,
+      Left: 804
+    },
+    {
+      X: 938,
+      Y: 402,
+      Width: 96,
+      Height: 96,
+      Location: {
+        X: 938,
+        Y: 402,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 96,
+        Height: 96,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 402,
+      Right: 1034,
+      Bottom: 498,
+      Left: 938
+    }
+  ],
+  Driver: {
+    HeaderSize: 8,
+    ReportSize: 1024,
+    ExpectedFeatureReportLength: 32,
+    ExpectedOutputReportLength: 1024,
+    ExpectedInputReportLength: 512,
+    KeyReportOffset: 4,
+    FirmwareVersionFeatureId: 5,
+    SerialNumberFeatureId: 6,
+    FirmwareVersionReportSkip: 6,
+    SerialNumberReportSkip: 2,
+    BytesPerSecondLimit: Infinity
+  }
 }

@@ -4,12 +4,10 @@ using OpenMacroBoard.SDK;
 using StreamDeckSharp.Internals;
 using System;
 using System.Threading.Tasks;
-using VerifyXunit;
 using Xunit;
 
 namespace StreamDeckSharp.Tests
 {
-    [UsesVerify]
     public class StreamDeckIoBitmapKeyTests
     {
         public ExtendedVerifySettings Verifier { get; } = DefaultVerifySettings.Build();

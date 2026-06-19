@@ -9,7 +9,7 @@ namespace StreamDeckSharp.Internals
     {
         private readonly Task writerTask;
         private readonly ConcurrentBufferedQueue<int, byte[]> imageQueue;
-        private readonly ConditionalWeakTable<KeyBitmap, byte[]> cacheKeyBitmaps = new();
+        private readonly ConditionalWeakTable<KeyBitmap, byte[]> cacheKeyBitmaps = [];
 
         public CachedHidClient(
             IStreamDeckHid deckHid,

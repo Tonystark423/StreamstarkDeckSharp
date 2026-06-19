@@ -10,7 +10,7 @@ namespace StreamDeckSharp.Internals
 {
     internal sealed class StreamDeckHidWrapper : IStreamDeckHid
     {
-        private readonly object hidStreamLock = new();
+        private readonly Lock hidStreamLock = new();
         private readonly string devicePath;
 
         /// <summary>

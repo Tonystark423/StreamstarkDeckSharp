@@ -139,14 +139,14 @@ namespace StreamDeckSharp.Internals
         /// <inheritdoc/>
         public byte[] GetLogoMessage()
         {
-            return new byte[] { 0x03, 0x02 };
+            return [0x03, 0x02];
         }
 
         private byte[] GetNullImage()
         {
             if (cachedNullImage is null)
             {
-                var rawNullImg = KeyBitmap.Create.FromBgr24Array(1, 1, new byte[] { 0, 0, 0 }).GetScaledVersion(imgSize, imgSize);
+                var rawNullImg = KeyBitmap.Create.FromBgr24Array(1, 1, [0, 0, 0]).GetScaledVersion(imgSize, imgSize);
                 cachedNullImage = EncodeImageToJpg(rawNullImg);
             }
 

@@ -1,154 +1,154 @@
 ﻿{
-  DeviceName: Stream Deck Mini,
-  Driver: {
-    BytesPerSecondLimit: Infinity,
-    ExpectedFeatureReportLength: 17,
-    ExpectedInputReportLength: 17,
-    ExpectedOutputReportLength: 1024,
-    FirmwareVersionFeatureId: 4,
-    FirmwareVersionReportSkip: 5,
-    HeaderSize: 16,
-    KeyReportOffset: 1,
-    ReportSize: 1024,
-    SerialNumberFeatureId: 3,
-    SerialNumberReportSkip: 5
-  },
-  Keys: [
-    {
-      Bottom: 80,
-      Height: 80,
-      IsEmpty: false,
-      Left: 0,
-      Location: {
-        IsEmpty: true,
-        X: 0,
-        Y: 0
-      },
-      Right: 80,
-      Size: {
-        Height: 80,
-        IsEmpty: false,
-        Width: 80
-      },
-      Top: 0,
-      Width: 80,
-      X: 0,
-      Y: 0
-    },
-    {
-      Bottom: 80,
-      Height: 80,
-      IsEmpty: false,
-      Left: 112,
-      Location: {
-        IsEmpty: false,
-        X: 112,
-        Y: 0
-      },
-      Right: 192,
-      Size: {
-        Height: 80,
-        IsEmpty: false,
-        Width: 80
-      },
-      Top: 0,
-      Width: 80,
-      X: 112,
-      Y: 0
-    },
-    {
-      Bottom: 80,
-      Height: 80,
-      IsEmpty: false,
-      Left: 224,
-      Location: {
-        IsEmpty: false,
-        X: 224,
-        Y: 0
-      },
-      Right: 304,
-      Size: {
-        Height: 80,
-        IsEmpty: false,
-        Width: 80
-      },
-      Top: 0,
-      Width: 80,
-      X: 224,
-      Y: 0
-    },
-    {
-      Bottom: 192,
-      Height: 80,
-      IsEmpty: false,
-      Left: 0,
-      Location: {
-        IsEmpty: false,
-        X: 0,
-        Y: 112
-      },
-      Right: 80,
-      Size: {
-        Height: 80,
-        IsEmpty: false,
-        Width: 80
-      },
-      Top: 112,
-      Width: 80,
-      X: 0,
-      Y: 112
-    },
-    {
-      Bottom: 192,
-      Height: 80,
-      IsEmpty: false,
-      Left: 112,
-      Location: {
-        IsEmpty: false,
-        X: 112,
-        Y: 112
-      },
-      Right: 192,
-      Size: {
-        Height: 80,
-        IsEmpty: false,
-        Width: 80
-      },
-      Top: 112,
-      Width: 80,
-      X: 112,
-      Y: 112
-    },
-    {
-      Bottom: 192,
-      Height: 80,
-      IsEmpty: false,
-      Left: 224,
-      Location: {
-        IsEmpty: false,
-        X: 224,
-        Y: 112
-      },
-      Right: 304,
-      Size: {
-        Height: 80,
-        IsEmpty: false,
-        Width: 80
-      },
-      Top: 112,
-      Width: 80,
-      X: 224,
-      Y: 112
-    }
-  ],
   UsbIds: [
     {
-      UsbProductId: 99,
-      UsbVendorId: 4057
+      UsbVendorId: 4057,
+      UsbProductId: 99
     },
     {
-      UsbProductId: 144,
-      UsbVendorId: 4057
+      UsbVendorId: 4057,
+      UsbProductId: 144
     }
-  ]
+  ],
+  DeviceName: Stream Deck Mini,
+  Keys: [
+    {
+      X: 0,
+      Y: 0,
+      Width: 80,
+      Height: 80,
+      Location: {
+        X: 0,
+        Y: 0,
+        IsEmpty: true
+      },
+      Size: {
+        Width: 80,
+        Height: 80,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 0,
+      Right: 80,
+      Bottom: 80,
+      Left: 0
+    },
+    {
+      X: 112,
+      Y: 0,
+      Width: 80,
+      Height: 80,
+      Location: {
+        X: 112,
+        Y: 0,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 80,
+        Height: 80,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 0,
+      Right: 192,
+      Bottom: 80,
+      Left: 112
+    },
+    {
+      X: 224,
+      Y: 0,
+      Width: 80,
+      Height: 80,
+      Location: {
+        X: 224,
+        Y: 0,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 80,
+        Height: 80,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 0,
+      Right: 304,
+      Bottom: 80,
+      Left: 224
+    },
+    {
+      X: 0,
+      Y: 112,
+      Width: 80,
+      Height: 80,
+      Location: {
+        X: 0,
+        Y: 112,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 80,
+        Height: 80,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 112,
+      Right: 80,
+      Bottom: 192,
+      Left: 0
+    },
+    {
+      X: 112,
+      Y: 112,
+      Width: 80,
+      Height: 80,
+      Location: {
+        X: 112,
+        Y: 112,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 80,
+        Height: 80,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 112,
+      Right: 192,
+      Bottom: 192,
+      Left: 112
+    },
+    {
+      X: 224,
+      Y: 112,
+      Width: 80,
+      Height: 80,
+      Location: {
+        X: 224,
+        Y: 112,
+        IsEmpty: false
+      },
+      Size: {
+        Width: 80,
+        Height: 80,
+        IsEmpty: false
+      },
+      IsEmpty: false,
+      Top: 112,
+      Right: 304,
+      Bottom: 192,
+      Left: 224
+    }
+  ],
+  Driver: {
+    HeaderSize: 16,
+    ReportSize: 1024,
+    ExpectedFeatureReportLength: 17,
+    ExpectedOutputReportLength: 1024,
+    ExpectedInputReportLength: 17,
+    KeyReportOffset: 1,
+    FirmwareVersionFeatureId: 4,
+    SerialNumberFeatureId: 3,
+    FirmwareVersionReportSkip: 5,
+    SerialNumberReportSkip: 5,
+    BytesPerSecondLimit: Infinity
+  }
 }

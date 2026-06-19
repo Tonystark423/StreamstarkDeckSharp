@@ -8,7 +8,7 @@ namespace StreamDeckSharp.Internals
     {
         private readonly object sync = new();
 
-        private readonly Dictionary<TKey, TValue> valueBuffer = new();
+        private readonly Dictionary<TKey, TValue> valueBuffer = [];
         private readonly Queue<TKey> queue = new();
 
         private volatile bool isAddingCompleted;
@@ -126,7 +126,7 @@ namespace StreamDeckSharp.Internals
         {
             if (disposed)
             {
-                throw new ObjectDisposedException(nameof(ConcurrentBufferedQueue<TKey, TValue>));
+                throw new ObjectDisposedException(nameof(ConcurrentBufferedQueue<,>));
             }
         }
     }

@@ -4,6 +4,7 @@ using StreamDeckSharp.Internals;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace StreamDeckSharp
 {
@@ -14,10 +15,11 @@ namespace StreamDeckSharp
         IDisposable,
         IObservable<DeviceStateReport>
     {
-        private readonly object sync = new();
-        private readonly List<DeviceState> knownDevices = new();
-        private readonly List<Subscription> subscriptions = new();
-        private readonly Dictionary<string, StreamDeckDeviceReference> knownDeviceLookup = new();
+        private readonly Lock sync = new();
+
+        private readonly List<DeviceState> knownDevices = [];
+        private readonly List<Subscription> subscriptions = [];
+        private readonly Dictionary<string, StreamDeckDeviceReference> knownDeviceLookup = [];
 
         private bool disposed = true;
 
@@ -118,7 +120,7 @@ namespace StreamDeckSharp
             /// Contains the state the subscriber knows about.
             /// This is used to calculate new updates.
             /// </summary>
-            private readonly List<bool> subscriberState = new();
+            private readonly List<bool> subscriberState = [];
 
             public Subscription(StreamDeckListener parent, IObserver<DeviceStateReport> observer)
             {

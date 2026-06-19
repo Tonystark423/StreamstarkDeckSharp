@@ -2,12 +2,10 @@ using OpenMacroBoard.Meta.TestUtils;
 using StreamDeckSharp.Internals;
 using System.Linq;
 using System.Threading.Tasks;
-using VerifyXunit;
 using Xunit;
 
 namespace StreamDeckSharp.Tests
 {
-    [UsesVerify]
     public class StreamDeckHidWriteTests
     {
         public ExtendedVerifySettings Verifier { get; } = DefaultVerifySettings.Build();
