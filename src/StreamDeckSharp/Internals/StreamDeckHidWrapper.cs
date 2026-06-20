@@ -1,5 +1,6 @@
 using HidSharp;
 using OpenMacroBoard.SDK;
+using StreamDeckSharp.Internals.HidComDriver;
 using System;
 using System.Diagnostics;
 using System.IO;

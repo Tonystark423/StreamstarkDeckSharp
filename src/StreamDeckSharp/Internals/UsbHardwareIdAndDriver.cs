@@ -1,4 +1,5 @@
 using OpenMacroBoard.SDK;
+using StreamDeckSharp.Internals.HidComDriver;
 using System.Collections.Generic;
 
 #pragma warning disable AV1000 // Type name contains the word 'and', which suggests it has multiple purposes

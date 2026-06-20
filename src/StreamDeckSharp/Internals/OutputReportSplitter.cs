@@ -14,7 +14,7 @@ namespace StreamDeckSharp.Internals
         );
 
         public static IEnumerable<byte[]> Split(
-            byte[] data,
+            ReadOnlyMemory<byte> data,
             byte[] buffer,
             int bufferLength,
             int headerSize,
@@ -33,7 +33,8 @@ namespace StreamDeckSharp.Internals
                 var isLast = remainingBytes <= maxPayloadLength;
                 var bytesToSend = Math.Min(remainingBytes, maxPayloadLength);
 
-                Array.Copy(data, bytesSent, buffer, headerSize, bytesToSend);
+                data.Slice(bytesSent, bytesToSend).CopyTo(buffer.AsMemory(headerSize, bytesToSend));
+
                 prepareData(buffer, splitNumber, bytesToSend, keyId, isLast);
                 yield return buffer;
 

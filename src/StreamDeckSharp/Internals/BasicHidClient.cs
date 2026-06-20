@@ -1,166 +1,166 @@
 using OpenMacroBoard.SDK;
+using StreamDeckSharp.Internals.HidComDriver;
 using System;
 using System.Text;
 using System.Threading;
 
-namespace StreamDeckSharp.Internals
+namespace StreamDeckSharp.Internals;
+
+internal class BasicHidClient : IMacroBoard
 {
-    internal class BasicHidClient : IMacroBoard
+    private readonly byte[] keyStates;
+    private readonly Lock disposeLock = new();
+
+    public BasicHidClient(
+        IStreamDeckHid deckHid,
+        IKeyLayout keys,
+        IStreamDeckHidComDriver hidComDriver
+    )
     {
-        private readonly byte[] keyStates;
-        private readonly Lock disposeLock = new();
+        DeckHid = deckHid;
+        Keys = keys;
 
-        public BasicHidClient(
-            IStreamDeckHid deckHid,
-            IKeyLayout keys,
-            IStreamDeckHidComDriver hidComDriver
-        )
+        deckHid.ConnectionStateChanged += (_, e) => ConnectionStateChanged?.Invoke(this, e);
+        deckHid.ReportReceived += DeckHid_ReportReceived;
+
+        HidComDriver = hidComDriver;
+        Buffer = new byte[deckHid.OutputReportLength];
+        keyStates = new byte[Keys.Count];
+    }
+
+    public event EventHandler<KeyEventArgs> KeyStateChanged;
+    public event EventHandler<ConnectionEventArgs> ConnectionStateChanged;
+
+    public IKeyLayout Keys { get; }
+    public bool IsDisposed { get; private set; }
+    public bool IsConnected => DeckHid.IsConnected;
+
+    protected IStreamDeckHid DeckHid { get; }
+    protected IStreamDeckHidComDriver HidComDriver { get; }
+    protected byte[] Buffer { get; }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    public string GetFirmwareVersion()
+    {
+        return ReadFeatureString(HidComDriver.FirmwareVersionFeatureId, HidComDriver.FirmwareVersionReportSkip);
+    }
+
+    public string GetSerialNumber()
+    {
+        return ReadFeatureString(HidComDriver.SerialNumberFeatureId, HidComDriver.SerialNumberReportSkip);
+    }
+
+    public void SetBrightness(byte percent)
+    {
+        ThrowIfAlreadyDisposed();
+        DeckHid.WriteFeature(HidComDriver.GetBrightnessMessage(percent));
+    }
+
+    public virtual void SetKeyBitmap(int keyId, KeyBitmap bitmapData)
+    {
+        keyId = HidComDriver.KeyIdMapper.ExtKeyIdToHardwareKeyId(keyId);
+
+        var payload = HidComDriver.GeneratePayload(bitmapData);
+
+        var reports = OutputReportSplitter.Split(
+            payload,
+            Buffer,
+            HidComDriver.ReportSize,
+            HidComDriver.HeaderSize,
+            keyId,
+            HidComDriver.PrepareDataForTransmission
+        );
+
+        foreach (var report in reports)
         {
-            DeckHid = deckHid;
-            Keys = keys;
-
-            deckHid.ConnectionStateChanged += (_, e) => ConnectionStateChanged?.Invoke(this, e);
-            deckHid.ReportReceived += DeckHid_ReportReceived;
-
-            HidComDriver = hidComDriver;
-            Buffer = new byte[deckHid.OutputReportLength];
-            keyStates = new byte[Keys.Count];
+            DeckHid.WriteReport(report);
         }
+    }
 
-        public event EventHandler<KeyEventArgs> KeyStateChanged;
-        public event EventHandler<ConnectionEventArgs> ConnectionStateChanged;
+    public void ShowLogo()
+    {
+        ThrowIfAlreadyDisposed();
+        ShowLogoWithoutDisposeVerification();
+    }
 
-        public IKeyLayout Keys { get; }
-        public bool IsDisposed { get; private set; }
-        public bool IsConnected => DeckHid.IsConnected;
+    protected virtual void Shutdown()
+    {
+    }
 
-        protected IStreamDeckHid DeckHid { get; }
-        protected IStreamDeckHidComDriver HidComDriver { get; }
-        protected byte[] Buffer { get; }
-
-        public void Dispose()
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        public string GetFirmwareVersion()
-        {
-            return ReadFeatureString(HidComDriver.FirmwareVersionFeatureId, HidComDriver.FirmwareVersionReportSkip);
-        }
-
-        public string GetSerialNumber()
-        {
-            return ReadFeatureString(HidComDriver.SerialNumberFeatureId, HidComDriver.SerialNumberReportSkip);
-        }
-
-        public void SetBrightness(byte percent)
-        {
-            ThrowIfAlreadyDisposed();
-            DeckHid.WriteFeature(HidComDriver.GetBrightnessMessage(percent));
-        }
-
-        public virtual void SetKeyBitmap(int keyId, KeyBitmap bitmapData)
-        {
-            keyId = HidComDriver.ExtKeyIdToHardwareKeyId(keyId);
-
-            var payload = HidComDriver.GeneratePayload(bitmapData);
-
-            var reports = OutputReportSplitter.Split(
-                payload,
-                Buffer,
-                HidComDriver.ReportSize,
-                HidComDriver.HeaderSize,
-                keyId,
-                HidComDriver.PrepareDataForTransmission
-            );
-
-            foreach (var report in reports)
+            lock (disposeLock)
             {
-                DeckHid.WriteReport(report);
-            }
-        }
+                if (IsDisposed)
+                {
+                    return;
+                }
 
-        public void ShowLogo()
-        {
-            ThrowIfAlreadyDisposed();
+                IsDisposed = true;
+            }
+
+            Shutdown();
+
+            // Sleep to let the stream deck catch up.
+            // Without this Sleep() the stream deck might set a key image after the logo was shown.
+            // I've no idea why it's sometimes executed out of order even though the write is synchronized.
+            Thread.Sleep(50);
+
             ShowLogoWithoutDisposeVerification();
+
+            DeckHid.Dispose();
         }
+    }
 
-        protected virtual void Shutdown()
+    protected void ThrowIfAlreadyDisposed()
+    {
+        if (IsDisposed)
         {
+            throw new ObjectDisposedException(nameof(BasicHidClient));
         }
+    }
 
-        protected virtual void Dispose(bool disposing)
+    private string ReadFeatureString(byte featureId, int skipBytes)
+    {
+        if (!DeckHid.ReadFeatureData(featureId, out var featureData))
         {
-            if (disposing)
-            {
-                lock (disposeLock)
-                {
-                    if (IsDisposed)
-                    {
-                        return;
-                    }
-
-                    IsDisposed = true;
-                }
-
-                Shutdown();
-
-                // Sleep to let the stream deck catch up.
-                // Without this Sleep() the stream deck might set a key image after the logo was shown.
-                // I've no idea why it's sometimes executed out of order even though the write is synchronized.
-                Thread.Sleep(50);
-
-                ShowLogoWithoutDisposeVerification();
-
-                DeckHid.Dispose();
-            }
-        }
-
-        protected void ThrowIfAlreadyDisposed()
-        {
-            if (IsDisposed)
-            {
-                throw new ObjectDisposedException(nameof(BasicHidClient));
-            }
-        }
-
-        private string ReadFeatureString(byte featureId, int skipBytes)
-        {
-            if (!DeckHid.ReadFeatureData(featureId, out var featureData))
-            {
 #pragma warning disable AV1135 // Do not return null for strings, collections or tasks
-                return null;
+            return null;
 #pragma warning restore AV1135
-            }
-
-            return Encoding.UTF8.GetString(featureData, skipBytes, featureData.Length - skipBytes).Trim('\0');
         }
 
-        private void DeckHid_ReportReceived(object sender, ReportReceivedEventArgs e)
-        {
-            ProcessKeys(e.ReportData);
-        }
+        return Encoding.UTF8.GetString(featureData, skipBytes, featureData.Length - skipBytes).Trim('\0');
+    }
 
-        private void ProcessKeys(byte[] newStates)
+    private void DeckHid_ReportReceived(object sender, ReportReceivedEventArgs e)
+    {
+        ProcessKeys(e.ReportData);
+    }
+
+    private void ProcessKeys(byte[] newStates)
+    {
+        for (var i = 0; i < keyStates.Length; i++)
         {
-            for (var i = 0; i < keyStates.Length; i++)
+            var newStatePos = i + HidComDriver.KeyReportOffset;
+
+            if (keyStates[i] != newStates[newStatePos])
             {
-                var newStatePos = i + HidComDriver.KeyReportOffset;
-
-                if (keyStates[i] != newStates[newStatePos])
-                {
-                    var externalKeyId = HidComDriver.HardwareKeyIdToExtKeyId(i);
-                    KeyStateChanged?.Invoke(this, new KeyEventArgs(externalKeyId, newStates[newStatePos] != 0));
-                    keyStates[i] = newStates[newStatePos];
-                }
+                var externalKeyId = HidComDriver.KeyIdMapper.HardwareKeyIdToExtKeyId(i);
+                KeyStateChanged?.Invoke(this, new KeyEventArgs(externalKeyId, newStates[newStatePos] != 0));
+                keyStates[i] = newStates[newStatePos];
             }
         }
+    }
 
-        private void ShowLogoWithoutDisposeVerification()
-        {
-            DeckHid.WriteFeature(HidComDriver.GetLogoMessage());
-        }
+    private void ShowLogoWithoutDisposeVerification()
+    {
+        DeckHid.WriteFeature(HidComDriver.GetLogoMessage());
     }
 }

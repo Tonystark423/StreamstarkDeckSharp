@@ -699,6 +699,7 @@
     SerialNumberFeatureId: 6,
     FirmwareVersionReportSkip: 6,
     SerialNumberReportSkip: 2,
-    BytesPerSecondLimit: Infinity
+    BytesPerSecondLimit: Infinity,
+    KeyImageSize: 96
   }
 }

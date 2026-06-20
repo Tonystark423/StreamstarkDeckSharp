@@ -1,5 +1,6 @@
 using OpenMacroBoard.SDK;
 using StreamDeckSharp.Internals;
+using StreamDeckSharp.Internals.HidComDriver;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,7 @@ namespace StreamDeckSharp
                         // Limit of 3'200'000 bytes/s (~3.0 MiB/s)
                         // because without that limit glitches will happen on fast writes.
                         BytesPerSecondLimit = 3_200_000,
+                        KeyImageSize = 72,
                     },
                     ElgatoUsbId(0x0060)
                 );
@@ -44,11 +46,12 @@ namespace StreamDeckSharp
                 RegisterNewHardwareInternal(
                     "Stream Deck MK.2",
                     streamDeckKeysNew,
-                    new HidComDriverStreamDeckJpeg(72)
+                    new HidComDriverStreamDeckJpeg()
                     {
                         // Limit of 1'500'000 bytes/s (~1.5 MB/s),
                         // because ImageGlitchTest.Rainbow has glitches with higher speeds
                         BytesPerSecondLimit = 1_500_000,
+                        KeyImageSize = 72,
                     },
                     ElgatoUsbId(0x0080)
                 );
@@ -57,11 +60,12 @@ namespace StreamDeckSharp
                 RegisterNewHardwareInternal(
                     "Stream Deck Rev2",
                     streamDeckKeysNew,
-                    new HidComDriverStreamDeckJpeg(72)
+                    new HidComDriverStreamDeckJpeg()
                     {
                         // Limit of 3'200'000 bytes/s (~3.0 MiB/s) just to be safe,
                         // because I don't own a StreamDeck Rev2 to test it.
                         BytesPerSecondLimit = 3_200_000,
+                        KeyImageSize = 72,
                     },
                     ElgatoUsbId(0x006d)
                 );
@@ -74,7 +78,10 @@ namespace StreamDeckSharp
                 RegisterNewHardwareInternal(
                     "Stream Deck XL",
                     new GridKeyLayout(8, 4, 96, 38),
-                    new HidComDriverStreamDeckJpeg(96),
+                    new HidComDriverStreamDeckJpeg()
+                    {
+                        KeyImageSize = 96,
+                    },
                     ElgatoUsbId(0x006c),
                     ElgatoUsbId(0x008f),
                     ElgatoUsbId(0x00ba)
@@ -88,7 +95,10 @@ namespace StreamDeckSharp
                 RegisterNewHardwareInternal(
                     "Stream Deck Mini",
                     new GridKeyLayout(3, 2, 80, 32),
-                    new HidComDriverStreamDeckMini(80),
+                    new HidComDriverStreamDeckMini()
+                    {
+                        KeyImageSize = 80,
+                    },
                     ElgatoUsbId(0x0063),
                     ElgatoUsbId(0x0090)
                 );

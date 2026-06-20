@@ -334,6 +334,7 @@
     SerialNumberFeatureId: 3,
     FirmwareVersionReportSkip: 5,
     SerialNumberReportSkip: 5,
-    BytesPerSecondLimit: 3200000.0
+    BytesPerSecondLimit: 3200000.0,
+    KeyImageSize: 72
   }
 }

@@ -1,84 +1,82 @@
 using OpenMacroBoard.SDK;
-using System.Runtime.CompilerServices;
+using StreamDeckSharp.Internals.HidComDriver;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StreamDeckSharp.Internals
+namespace StreamDeckSharp.Internals;
+
+internal class CachedHidClient : BasicHidClient
 {
-    internal class CachedHidClient : BasicHidClient
+    private readonly Task writerTask;
+    private readonly ConcurrentBufferedQueue<int, byte[]> imageQueue;
+
+    public CachedHidClient(
+        IStreamDeckHid deckHid,
+        IKeyLayout keys,
+        IStreamDeckHidComDriver hidComDriver
+    )
+        : base(deckHid, keys, hidComDriver)
     {
-        private readonly Task writerTask;
-        private readonly ConcurrentBufferedQueue<int, byte[]> imageQueue;
-        private readonly ConditionalWeakTable<KeyBitmap, byte[]> cacheKeyBitmaps = [];
+        imageQueue = new();
+        writerTask = StartBitmapWriterTask();
+    }
 
-        public CachedHidClient(
-            IStreamDeckHid deckHid,
-            IKeyLayout keys,
-            IStreamDeckHidComDriver hidComDriver
-        )
-            : base(deckHid, keys, hidComDriver)
+    public override void SetKeyBitmap(int keyId, KeyBitmap bitmapData)
+    {
+        ThrowIfAlreadyDisposed();
+        keyId = HidComDriver.KeyIdMapper.ExtKeyIdToHardwareKeyId(keyId);
+
+        var payload = HidComDriver.GeneratePayload(bitmapData);
+        imageQueue.Add(keyId, payload);
+    }
+
+    protected override void Shutdown()
+    {
+        imageQueue.CompleteAdding();
+        writerTask.Wait();
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+        imageQueue.Dispose();
+    }
+
+    private Task StartBitmapWriterTask()
+    {
+        void BackgroundAction()
         {
-            imageQueue = new ConcurrentBufferedQueue<int, byte[]>();
-            writerTask = StartBitmapWriterTask();
-        }
-
-        public override void SetKeyBitmap(int keyId, KeyBitmap bitmapData)
-        {
-            ThrowIfAlreadyDisposed();
-            keyId = HidComDriver.ExtKeyIdToHardwareKeyId(keyId);
-
-            var payload = cacheKeyBitmaps.GetValue(bitmapData, HidComDriver.GeneratePayload);
-            imageQueue.Add(keyId, payload);
-        }
-
-        protected override void Shutdown()
-        {
-            imageQueue.CompleteAdding();
-            writerTask.Wait();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            imageQueue.Dispose();
-        }
-
-        private Task StartBitmapWriterTask()
-        {
-            void BackgroundAction()
+            while (true)
             {
-                while (true)
+                var (success, keyId, payload) = imageQueue.Take();
+
+                if (!success)
                 {
-                    var (success, keyId, payload) = imageQueue.Take();
+                    // image queue completed
+                    break;
+                }
 
-                    if (!success)
-                    {
-                        // image queue completed
-                        break;
-                    }
+                var reports = OutputReportSplitter.Split(
+                    payload,
+                    Buffer,
+                    HidComDriver.ReportSize,
+                    HidComDriver.HeaderSize,
+                    keyId,
+                    HidComDriver.PrepareDataForTransmission
+                );
 
-                    var reports = OutputReportSplitter.Split(
-                        payload,
-                        Buffer,
-                        HidComDriver.ReportSize,
-                        HidComDriver.HeaderSize,
-                        keyId,
-                        HidComDriver.PrepareDataForTransmission
-                    );
-
-                    foreach (var report in reports)
-                    {
-                        DeckHid.WriteReport(report);
-                    }
+                foreach (var report in reports)
+                {
+                    DeckHid.WriteReport(report);
                 }
             }
-
-            return Task.Factory.StartNew(
-                BackgroundAction,
-                CancellationToken.None,
-                TaskCreationOptions.LongRunning,
-                TaskScheduler.Default
-            );
         }
+
+        return Task.Factory.StartNew(
+            BackgroundAction,
+            CancellationToken.None,
+            TaskCreationOptions.LongRunning,
+            TaskScheduler.Default
+        );
     }
 }
