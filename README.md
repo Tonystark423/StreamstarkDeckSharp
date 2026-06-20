@@ -67,6 +67,9 @@ static byte GetRandomByte()
 }
 ```
 
+Here is what the example looks like after pressing some keys:
+![](https://raw.githubusercontent.com/OpenMacroBoard/StreamDeckSharp/refs/heads/main/doc/images/rainbow_example.png)
+
 # Supported devices
 
 NuGet: [`StreamDeckSharp`](https://www.nuget.org/packages/StreamDeckSharp/)
