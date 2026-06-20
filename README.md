@@ -67,16 +67,7 @@ static byte GetRandomByte()
 }
 ```
 
-# Providers and supported devices 
-
-Providers are libraries that manage the communication to the macro boards.
-This abstraction is needed to allow third parties to implement devices without changes to the core functionality.
-
-At the moment there are just two providers that are maintained by me.
-
-
-## StreamDeckSharp
-
+# Supported devices
 
 NuGet: [`StreamDeckSharp`](https://www.nuget.org/packages/StreamDeckSharp/)
 
@@ -88,20 +79,6 @@ NuGet: [`StreamDeckSharp`](https://www.nuget.org/packages/StreamDeckSharp/)
 | [Stream Deck Mini](https://www.elgato.com/de/gaming/stream-deck-mini) | 3 x 2       |
 
 Keep in mind that Elgato sometimes releases new revisions of their devices with different PIDs (USB product IDs) which might break compatibility. If you have a device like that, please open an issue on GitHub with the new PID.
-
-## OpenMacroBoard.SocketIO 
-
-NuGet: [`OpenMacroBoard.SocketIO`](https://www.nuget.org/packages/OpenMacroBoard.SocketIO/)
-
-| Device       | Description                                              |
-| ------------ | -------------------------------------------------------- |
-| VirtualBoard | Software emulated board with arbitrary key configuration |
-
-
-# Is device _XYZ_ supported?
-
-If I find the time I'd love to add more, but you can also implement one yourself by referencing `OpenMacroBoard.SDK` and writing a class that implements `IObservable<DeviceStateReport>`. This class can then be added as a device listener in a `DeviceContext`.
-If you want me to implement it, you can donate hardware (or the money so I can buy that specific hardware you want implemented) - just create a ticket and we talk about it ;-)
 
 # Examples
 
