@@ -1,89 +1,125 @@
-<div align="center">
-  <img src="https://raw.githubusercontent.com/OpenStreamDeck/StreamDeckSharp/master/doc/images/banner/StreamDeckSharpBanner_150px.png">
-</div>
+
+![StreamDeckSharp Banner](https://raw.githubusercontent.com/OpenStreamDeck/StreamDeckSharp/master/doc/images/banner/StreamDeckSharpBanner_150px.png)
 
 -----------------
 
-**StreamDeckSharp is a simple (unofficial) .NET interface for the [Elgato Stream Deck](https://www.elgato.com/en/gaming/stream-deck)**
+**StreamDeckSharp is a simple (unofficial) library (.NET 10+) for the [Elgato Stream Deck](https://www.elgato.com/en/gaming/stream-deck) family**
 
 [![license](https://img.shields.io/github/license/OpenStreamDeck/StreamDeckSharp.svg)](https://github.com/OpenStreamDeck/StreamDeckSharp/blob/master/LICENSE.md)
 [![GitHub release](https://img.shields.io/github/release/OpenStreamDeck/StreamDeckSharp.svg)](https://github.com/OpenStreamDeck/StreamDeckSharp/releases)
 [![Nuget version](https://img.shields.io/nuget/v/streamdecksharp.svg)](https://www.nuget.org/packages/StreamDeckSharp/)
 
-#### [Recent Changes](CHANGELOG.md)
+First things first, StreamDeckSharp is not official software by Elgato, nor is it endorsed by them.
 
-## Quickstart _(TL;DR)_
-***Should work on all major operating systems.***  
-I typically test on Windows and Linux (Debian, Ubuntu), but it should also work on macOS. See Wiki: [Supported Platforms](https://github.com/OpenMacroBoard/StreamDeckSharp/wiki/Supported-Platforms-and-Devices)
+StreamDeckSharp is a device provider implementation for [`OpenMacroBoard.SDK`](https://github.com/OpenMacroBoard/OpenMacroBoard.SDK).
 
-1. Add StreamDeckSharp reference (via nuget or download latest release)
-2. Add a using directive for StreamDeckSharp: `using StreamDeckSharp;`
+# Quick Start
 
-I want to...              | Code (C#)
-------------------------- | ---------------------------------------------------------
-create a device reference | `var deck = StreamDeck.OpenDevice();`  
-set the brightness        | `deck.SetBrightness(50);`
-create bitmap for key     | `var bitmap = KeyBitmap.Create.FromFile("icon.png")`
-set key image             | `deck.SetKeyBitmap(keyId, bitmap)`
-clear key image           | `deck.ClearKey(keyId)`
-process key events        | `deck.KeyStateChanged += KeyHandler;`
+Create a new console project in Visual Studio (.NET 10+), add [`OpenMacroBoard.SDK`](https://www.nuget.org/packages/OpenMacroBoard.SDK/) as a reference and at least one device provider.
 
-**Make sure to dispose the device reference correctly** _(use `using` whenever possible)_
+In this example we use
 
-## Examples
-If you want to see some examples take a look at the [example projects](https://github.com/OpenMacroBoard/StreamDeckSharp.ExampleCollection).  
-Here is a short example called "Austria". Copy the code and start hacking :wink:
+- [`OpenMacroBoard.SocketIO`](https://www.nuget.org/packages/OpenMacroBoard.SocketIO/) to support the `VirtualMacroBoard`
+- [`StreamDeckSharp`](https://www.nuget.org/packages/StreamDeckSharp/) to support the [Elgato Stream Deck family](https://www.elgato.com/de/de/s/welcome-to-stream-deck)  
+  <sub>***Note**: Neither OpenMacroBoard nor StreamDeckSharp are made or endorsed by Elgato</sub>
 
-```C#
-using System;
+Once you added the NuGet packages copy-paste the following lines:
+
+```csharp
 using OpenMacroBoard.SDK;
-using StreamDeckSharp;
+using OpenMacroBoard.SocketIO;  // for VirtualMacroBoard
+using StreamDeckSharp;          // for StreamDeck
 
-namespace StreamDeckSharp.Examples.Austria
+// create a device context (fluent API)
+// and add listener for devices (device provider)
+using var ctx = DeviceContext.Create()
+    .AddListener<SocketIOBoardListener>()   // VirtualMacroBoard
+    .AddListener<StreamDeckListener>()      // StreamDeck
+    ;
+
+Console.WriteLine("Waiting for a device... (press Ctrl+C to cancel)");
+using var board = await ctx.OpenAsync();
+Console.WriteLine("Device found.");
+Console.WriteLine("1) Try to press some buttons on the device.");
+Console.WriteLine("2) Press any key in this console to end the demo.");
+
+// react to key press event by setting a random color
+board.KeyStateChanged += (sender, arg) => board.SetKeyBitmap(arg.Key, GetRandomColorKey());
+
+// Wait for a key press in the console window to exit
+// the application and disconnect the device.
+Console.ReadKey();
+
+// Helper function to create a random color KeyBitmap
+static KeyBitmap GetRandomColorKey()
 {
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            //This example is designed for the 5x3 (original) Stream Deck.
+    var r = GetRandomByte();
+    var g = GetRandomByte();
+    var b = GetRandomByte();
 
-            //Create some color we use later to draw the flag of austria
-            var red = KeyBitmap.Create.FromRgb(237, 41, 57);
-            var white = KeyBitmap.Create.FromRgb(255, 255, 255);
-            var rowColors = new KeyBitmap[] { red, white, red };
+    return KeyBitmap.Create.FromRgb(r, g, b);
+}
 
-            //Open the Stream Deck device
-            using (var deck = StreamDeck.OpenDevice())
-            {
-                deck.SetBrightness(100);
-
-                //Send the bitmap informaton to the device
-                for (int i = 0; i < deck.Keys.Count; i++)
-                    deck.SetKeyBitmap(i, rowColors[i / 5]);
-
-                Console.ReadKey();
-            }
-        }
-    }
+// Helper function to get a random byte
+static byte GetRandomByte()
+{
+    return (byte)Random.Shared.Next(255);
 }
 ```
 
-Here is what the "Rainbow" example looks like after pressing some keys
+# Providers and supported devices 
 
-![Rainbow example photo](doc/images/rainbow_example.png?raw=true "Rainbow demo after pressing some keys")
+Providers are libraries that manage the communication to the macro boards.
+This abstraction is needed to allow third parties to implement devices without changes to the core functionality.
 
-### Play games on a StreamDeck
-For example minesweeper (take a look at the [example projects](https://github.com/OpenMacroBoard/StreamDeckSharp.ExampleCollection) if you are interested in that)
+At the moment there are just two providers that are maintained by me.
 
-<img src="doc/images/minesweeper.jpg?raw=true" width="500" />
 
-### You can even play videos on a StreamDeck
-Here is a short demo, playing a video on a stream deck device.
+## StreamDeckSharp
 
+
+NuGet: [`StreamDeckSharp`](https://www.nuget.org/packages/StreamDeckSharp/)
+
+| Device                                                                | Description |
+| --------------------------------------------------------------------- | ----------- |
+| Stream Deck _(original/legacy)_                                       | 5 x 3       |
+| [Stream Deck](https://www.elgato.com/de/gaming/stream-deck) _(MK2)_   | 5 x 3       |
+| [Stream Deck XL](https://www.elgato.com/ww/de/p/stream-deck-xl)       | 8 x 4       |
+| [Stream Deck Mini](https://www.elgato.com/de/gaming/stream-deck-mini) | 3 x 2       |
+
+Keep in mind that Elgato sometimes releases new revisions of their devices with different PIDs (USB product IDs) which might break compatibility. If you have a device like that, please open an issue on GitHub with the new PID.
+
+## OpenMacroBoard.SocketIO 
+
+NuGet: [`OpenMacroBoard.SocketIO`](https://www.nuget.org/packages/OpenMacroBoard.SocketIO/)
+
+| Device       | Description                                              |
+| ------------ | -------------------------------------------------------- |
+| VirtualBoard | Software emulated board with arbitrary key configuration |
+
+
+# Is device _XYZ_ supported?
+
+If I find the time I'd love to add more, but you can also implement one yourself by referencing `OpenMacroBoard.SDK` and writing a class that implements `IObservable<DeviceStateReport>`. This class can then be added as a device listener in a `DeviceContext`.
+If you want me to implement it, you can donate hardware (or the money so I can buy that specific hardware you want implemented) - just create a ticket and we talk about it ;-)
+
+# Examples
+
+You can find a lot of examples in our [example collection](https://github.com/OpenMacroBoard/OpenMacroBoard.ExampleCollection)
+
+
+## Fullscreen images
+<img src="https://raw.githubusercontent.com/OpenMacroBoard/openmacroboard.github.io/refs/heads/main/assets/images/lasershow.png" width="500" />
+
+## Play games
+Play games on a macro board, for example minesweeper (also part of the example projects)
+<img src="https://raw.githubusercontent.com/OpenMacroBoard/StreamDeckSharp/main/doc/images/minesweeper.jpg" width="500" />
+
+## Videos
 [![Demo video of the example](https://i.imgur.com/8tlkaIg.png)](http://www.youtube.com/watch?v=tNwUG0sPmKw)  
-_*The glitches you can see are already fixed._
+_\*The glitches you can see are already fixed._
 
-More about that in the Wiki: [Play video on StreamDeck](https://github.com/OpenStreamDeck/StreamDeckSharp/wiki/Play-video-on-StreamDeck)
+
 
 ---
  
