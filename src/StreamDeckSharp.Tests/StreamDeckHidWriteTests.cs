@@ -4,67 +4,66 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace StreamDeckSharp.Tests
+namespace StreamDeckSharp.Tests;
+
+public class StreamDeckHidWriteTests
 {
-    public class StreamDeckHidWriteTests
+    public ExtendedVerifySettings Verifier { get; } = DefaultVerifySettings.Build();
+
+    public static TheoryData<IUsbHidHardware, byte> GetDataForBrightnessTest()
     {
-        public ExtendedVerifySettings Verifier { get; } = DefaultVerifySettings.Build();
+        var brighnessValues = new byte[] { 100, 0, 33, 66 };
 
-        public static TheoryData<IUsbHidHardware, byte> GetDataForBrightnessTest()
-        {
-            var brighnessValues = new byte[] { 100, 0, 33, 66 };
+        return Hardware
+            .GetInternalStreamDeckHardwareInfos()
+            .Cast<IUsbHidHardware>()
+            .CrossRef(brighnessValues)
+            .ToTheoryData();
+    }
 
-            return Hardware
-                .GetInternalStreamDeckHardwareInfos()
-                .Cast<IUsbHidHardware>()
-                .CrossRef(brighnessValues)
-                .ToTheoryData();
-        }
+    [Theory]
+    [MemberData(nameof(GetDataForBrightnessTest))]
+    internal async Task SettingBrightnessCausesTheExpectedOuput(
+        IUsbHidHardware hardware,
+        byte brightness
+    )
+    {
+        var hardwareInternal = hardware.Internal();
 
-        [Theory]
-        [MemberData(nameof(GetDataForBrightnessTest))]
-        internal async Task SettingBrightnessCausesTheExpectedOuput(
-            IUsbHidHardware hardware,
-            byte brightness
-        )
-        {
-            var hardwareInternal = hardware.Internal();
+        // Arrange
+        Verifier.Initialize();
 
-            // Arrange
-            Verifier.Initialize();
+        Verifier
+            .UseFileNameAsDirectory()
+            .UseFileName(hardwareInternal.DeviceName)
+            .UseUniqueSuffix($"Value={brightness}");
 
-            Verifier
-                .UseFileNameAsDirectory()
-                .UseFileName(hardwareInternal.DeviceName)
-                .UseUniqueSuffix($"Value={brightness}");
+        using var context = new StreamDeckHidTestContext(hardwareInternal);
 
-            using var context = new StreamDeckHidTestContext(hardwareInternal);
+        // Act
+        context.Board.SetBrightness(brightness);
 
-            // Act
-            context.Board.SetBrightness(brightness);
+        // Assert
+        await Verifier.VerifyAsync(context.Log.ToString());
+    }
 
-            // Assert
-            await Verifier.VerifyAsync(context.Log.ToString());
-        }
+    [Theory]
+    [ClassData(typeof(AllHardwareInfoTestData))]
+    internal async Task CallingShowLogoCausesTheExpectedOutput(UsbHardwareIdAndDriver hardware)
+    {
+        // Arrange
+        Verifier.Initialize();
 
-        [Theory]
-        [ClassData(typeof(AllHardwareInfoTestData))]
-        internal async Task CallingShowLogoCausesTheExpectedOutput(UsbHardwareIdAndDriver hardware)
-        {
-            // Arrange
-            Verifier.Initialize();
+        Verifier
+            .UseFileNameAsDirectory()
+            .UseFileName(hardware.DeviceName);
 
-            Verifier
-                .UseFileNameAsDirectory()
-                .UseFileName(hardware.DeviceName);
+        using var context = new StreamDeckHidTestContext(hardware);
 
-            using var context = new StreamDeckHidTestContext(hardware);
+        // Act
+        context.Board.ShowLogo();
 
-            // Act
-            context.Board.ShowLogo();
-
-            // Assert
-            await Verifier.VerifyAsync(context.Log.ToString());
-        }
+        // Assert
+        await Verifier.VerifyAsync(context.Log.ToString());
     }
 }

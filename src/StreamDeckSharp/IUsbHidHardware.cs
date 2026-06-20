@@ -1,15 +1,14 @@
 using System.Collections.Generic;
 
-namespace StreamDeckSharp
+namespace StreamDeckSharp;
+
+/// <summary>
+/// USB HID specific hardware information
+/// </summary>
+public interface IUsbHidHardware : IHardware
 {
     /// <summary>
-    /// USB HID specific hardware information
+    /// Unique identifier for USB device. Vendor and product ID pair.
     /// </summary>
-    public interface IUsbHidHardware : IHardware
-    {
-        /// <summary>
-        /// Unique identifier for USB device. Vendor and product ID pair.
-        /// </summary>
-        IReadOnlyList<UsbVendorProductPair> UsbIds { get; }
-    }
+    IReadOnlyList<UsbVendorProductPair> UsbIds { get; }
 }

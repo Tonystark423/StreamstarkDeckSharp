@@ -1,47 +1,46 @@
 using System;
 using System.Collections.Generic;
 
-namespace StreamDeckSharp.Internals
+namespace StreamDeckSharp.Internals;
+
+internal static class OutputReportSplitter
 {
-    internal static class OutputReportSplitter
+    public delegate void PrepareDataForTransmission(
+        byte[] data,
+        int pageNumber,
+        int payloadLength,
+        int keyId,
+        bool isLast
+    );
+
+    public static IEnumerable<byte[]> Split(
+        ReadOnlyMemory<byte> data,
+        byte[] buffer,
+        int bufferLength,
+        int headerSize,
+        int keyId,
+        PrepareDataForTransmission prepareData
+    )
     {
-        public delegate void PrepareDataForTransmission(
-            byte[] data,
-            int pageNumber,
-            int payloadLength,
-            int keyId,
-            bool isLast
-        );
+        var maxPayloadLength = bufferLength - headerSize;
 
-        public static IEnumerable<byte[]> Split(
-            ReadOnlyMemory<byte> data,
-            byte[] buffer,
-            int bufferLength,
-            int headerSize,
-            int keyId,
-            PrepareDataForTransmission prepareData
-        )
-        {
-            var maxPayloadLength = bufferLength - headerSize;
-
-            var remainingBytes = data.Length;
-            var bytesSent = 0;
+        var remainingBytes = data.Length;
+        var bytesSent = 0;
 
 #pragma warning disable S1994 // "for" loop increment clauses should modify the loops' counters
-            for (var splitNumber = 0; remainingBytes > 0; splitNumber++)
-            {
-                var isLast = remainingBytes <= maxPayloadLength;
-                var bytesToSend = Math.Min(remainingBytes, maxPayloadLength);
+        for (var splitNumber = 0; remainingBytes > 0; splitNumber++)
+        {
+            var isLast = remainingBytes <= maxPayloadLength;
+            var bytesToSend = Math.Min(remainingBytes, maxPayloadLength);
 
-                data.Slice(bytesSent, bytesToSend).CopyTo(buffer.AsMemory(headerSize, bytesToSend));
+            data.Slice(bytesSent, bytesToSend).CopyTo(buffer.AsMemory(headerSize, bytesToSend));
 
-                prepareData(buffer, splitNumber, bytesToSend, keyId, isLast);
-                yield return buffer;
+            prepareData(buffer, splitNumber, bytesToSend, keyId, isLast);
+            yield return buffer;
 
-                bytesSent += bytesToSend;
-                remainingBytes -= bytesToSend;
-            }
-#pragma warning restore S1994 // "for" loop increment clauses should modify the loops' counters
+            bytesSent += bytesToSend;
+            remainingBytes -= bytesToSend;
         }
+#pragma warning restore S1994 // "for" loop increment clauses should modify the loops' counters
     }
 }

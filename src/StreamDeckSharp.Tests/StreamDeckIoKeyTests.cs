@@ -5,332 +5,331 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace StreamDeckSharp.Tests
+namespace StreamDeckSharp.Tests;
+
+public class StreamDeckIoKeyTests
 {
-    public class StreamDeckIoKeyTests
+    public static TheoryData<KeyPressTestCase> TestData { get; } = GetData().ToTheoryData();
+
+    public ExtendedVerifySettings Verifier { get; } = DefaultVerifySettings.Build();
+
+    [Theory]
+    [MemberData(nameof(TestData))]
+    internal async Task InputReportsBehaveAsExpected(KeyPressTestCase testCase)
     {
-        public static TheoryData<KeyPressTestCase> TestData { get; } = GetData().ToTheoryData();
+        var internalHardware = testCase.Hardware.Internal();
 
-        public ExtendedVerifySettings Verifier { get; } = DefaultVerifySettings.Build();
+        var inputReports = Unpack(
+            testCase.PackedInputReports,
+            internalHardware.Driver.ExpectedInputReportLength
+        );
 
-        [Theory]
-        [MemberData(nameof(TestData))]
-        internal async Task InputReportsBehaveAsExpected(KeyPressTestCase testCase)
+        // Arrange
+        Verifier.Initialize();
+
+        Verifier
+            .UseFileNameAsDirectory()
+            .UseFileName(testCase.TestName);
+
+        using var context = new StreamDeckHidTestContext(internalHardware);
+
+        var keyLog = new StringBuilder();
+
+        context.Board.KeyStateChanged += (_, e)
+            => keyLog.Append(e.Key).Append(" - ").AppendLine(e.IsDown ? "DOWN" : "UP");
+
+        // Act
+        foreach (var report in inputReports)
         {
-            var internalHardware = testCase.Hardware.Internal();
-
-            var inputReports = Unpack(
-                testCase.PackedInputReports,
-                internalHardware.Driver.ExpectedInputReportLength
-            );
-
-            // Arrange
-            Verifier.Initialize();
-
-            Verifier
-                .UseFileNameAsDirectory()
-                .UseFileName(testCase.TestName);
-
-            using var context = new StreamDeckHidTestContext(internalHardware);
-
-            var keyLog = new StringBuilder();
-
-            context.Board.KeyStateChanged += (_, e)
-                => keyLog.Append(e.Key).Append(" - ").AppendLine(e.IsDown ? "DOWN" : "UP");
-
-            // Act
-            foreach (var report in inputReports)
-            {
-                context.Hid.FakeIncommingInputReport(report);
-            }
-
-            // Assert
-            await Verifier.VerifyAsync(keyLog.ToString());
+            context.Hid.FakeIncommingInputReport(report);
         }
 
-        private static IEnumerable<KeyPressTestCase> GetData()
+        // Assert
+        await Verifier.VerifyAsync(keyLog.ToString());
+    }
+
+    private static IEnumerable<KeyPressTestCase> GetData()
+    {
+        // Because most of the data in input reports is zero, the test reports are "packed"
+        // with a simple method. Each byte is encoded in pairs:
+        // [indexA], [valueA], [indexB], [valueB], [indexC], [valueC],...
+        // The total size of the array is defined by the hardware information.
+
+        // Some of the data has still a lot of redundancy in the packed form,
+        // but are intentionally not "packed" more with loops to keep them simple and readable.
+
+        yield return new KeyPressTestCase()
         {
-            // Because most of the data in input reports is zero, the test reports are "packed"
-            // with a simple method. Each byte is encoded in pairs:
-            // [indexA], [valueA], [indexB], [valueB], [indexC], [valueC],...
-            // The total size of the array is defined by the hardware information.
+            TestName = "StreamDeckXL_EachKeyOnce",
+            Hardware = Hardware.StreamDeckXL.Internal(),
+            PackedInputReports =
+            [
+                [0, 1, 2, 32, 4, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 5, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 6, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 7, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 8, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 9, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 10, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 11, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 12, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 13, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 14, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 15, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 16, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 17, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 18, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 19, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 20, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 21, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 22, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 23, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 24, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 25, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 26, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 27, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 28, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 29, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 30, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 31, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 32, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 33, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 34, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 35, 1],
+                [0, 1, 2, 32],
+            ],
+        };
 
-            // Some of the data has still a lot of redundancy in the packed form,
-            // but are intentionally not "packed" more with loops to keep them simple and readable.
+        yield return new KeyPressTestCase()
+        {
+            TestName = "StreamDeckXL_MultipleKeysDown",
+            Hardware = Hardware.StreamDeckXL.Internal(),
+            PackedInputReports =
+            [
+                [0, 1, 2, 32, 4, 1, 5, 1],
+                [0, 1, 2, 32, 4, 1, 5, 1, 6, 1],
+                [0, 1, 2, 32, 4, 1, 5, 1],
+                [0, 1, 2, 32, 4, 1],
+                [0, 1, 2, 32],
+                [0, 1, 2, 32, 4, 1],
+                [0, 1, 2, 32, 4, 1, 5, 1],
+                [0, 1, 2, 32, 4, 1, 5, 1, 6, 1],
+                [0, 1, 2, 32, 5, 1, 6, 1],
+                [0, 1, 2, 32, 6, 1],
+                [0, 1, 2, 32],
+            ],
+        };
 
-            yield return new KeyPressTestCase()
-            {
-                TestName = "StreamDeckXL_EachKeyOnce",
-                Hardware = Hardware.StreamDeckXL.Internal(),
-                PackedInputReports =
-                [
-                    [0, 1, 2, 32, 4, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 5, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 6, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 7, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 8, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 9, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 10, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 11, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 12, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 13, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 14, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 15, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 16, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 17, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 18, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 19, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 20, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 21, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 22, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 23, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 24, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 25, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 26, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 27, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 28, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 29, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 30, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 31, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 32, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 33, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 34, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 35, 1],
-                    [0, 1, 2, 32],
-                ],
-            };
+        yield return new KeyPressTestCase()
+        {
+            TestName = "StreamDeckMK2_EachKeyOnce",
+            Hardware = Hardware.StreamDeckMK2.Internal(),
+            PackedInputReports =
+            [
+                [0, 1, 2, 15],
+                [0, 1, 2, 15, 5, 1],
+                [0, 1, 2, 15],
+                [0, 1, 2, 15, 6, 1],
+                [0, 1, 2, 15],
+                [0, 1, 2, 15, 7, 1],
+                [0, 1, 2, 15],
+                [0, 1, 2, 15, 8, 1],
+                [0, 1, 2, 15],
+                [0, 1, 2, 15, 9, 1],
+                [0, 1, 2, 15],
+                [0, 1, 2, 15, 10, 1],
+                [0, 1, 2, 15],
+                [0, 1, 2, 15, 11, 1],
+                [0, 1, 2, 15],
+                [0, 1, 2, 15, 12, 1],
+                [0, 1, 2, 15],
+                [0, 1, 2, 15, 13, 1],
+                [0, 1, 2, 15],
+                [0, 1, 2, 15, 14, 1],
+                [0, 1, 2, 15],
+                [0, 1, 2, 15, 15, 1],
+                [0, 1, 2, 15],
+                [0, 1, 2, 15, 16, 1],
+                [0, 1, 2, 15],
+                [0, 1, 2, 15, 17, 1],
+                [0, 1, 2, 15],
+                [0, 1, 2, 15, 18, 1],
+                [0, 1, 2, 15],
+            ],
+        };
 
-            yield return new KeyPressTestCase()
-            {
-                TestName = "StreamDeckXL_MultipleKeysDown",
-                Hardware = Hardware.StreamDeckXL.Internal(),
-                PackedInputReports =
-                [
-                    [0, 1, 2, 32, 4, 1, 5, 1],
-                    [0, 1, 2, 32, 4, 1, 5, 1, 6, 1],
-                    [0, 1, 2, 32, 4, 1, 5, 1],
-                    [0, 1, 2, 32, 4, 1],
-                    [0, 1, 2, 32],
-                    [0, 1, 2, 32, 4, 1],
-                    [0, 1, 2, 32, 4, 1, 5, 1],
-                    [0, 1, 2, 32, 4, 1, 5, 1, 6, 1],
-                    [0, 1, 2, 32, 5, 1, 6, 1],
-                    [0, 1, 2, 32, 6, 1],
-                    [0, 1, 2, 32],
-                ],
-            };
+        yield return new KeyPressTestCase()
+        {
+            TestName = "StreamDeckMK2_MultipleKeysDown",
+            Hardware = Hardware.StreamDeckMK2.Internal(),
+            PackedInputReports =
+            [
+                [0, 1, 2, 15, 4, 1, 5, 1],
+                [0, 1, 2, 15, 4, 1, 5, 1, 6, 1],
+                [0, 1, 2, 15, 4, 1, 5, 1],
+                [0, 1, 2, 15, 4, 1],
+                [0, 1, 2, 15],
+                [0, 1, 2, 15, 4, 1],
+                [0, 1, 2, 15, 4, 1, 5, 1],
+                [0, 1, 2, 15, 4, 1, 5, 1, 6, 1],
+                [0, 1, 2, 15, 5, 1, 6, 1],
+                [0, 1, 2, 15, 6, 1],
+                [0, 1, 2, 15],
+            ],
+        };
 
-            yield return new KeyPressTestCase()
-            {
-                TestName = "StreamDeckMK2_EachKeyOnce",
-                Hardware = Hardware.StreamDeckMK2.Internal(),
-                PackedInputReports =
-                [
-                    [0, 1, 2, 15],
-                    [0, 1, 2, 15, 5, 1],
-                    [0, 1, 2, 15],
-                    [0, 1, 2, 15, 6, 1],
-                    [0, 1, 2, 15],
-                    [0, 1, 2, 15, 7, 1],
-                    [0, 1, 2, 15],
-                    [0, 1, 2, 15, 8, 1],
-                    [0, 1, 2, 15],
-                    [0, 1, 2, 15, 9, 1],
-                    [0, 1, 2, 15],
-                    [0, 1, 2, 15, 10, 1],
-                    [0, 1, 2, 15],
-                    [0, 1, 2, 15, 11, 1],
-                    [0, 1, 2, 15],
-                    [0, 1, 2, 15, 12, 1],
-                    [0, 1, 2, 15],
-                    [0, 1, 2, 15, 13, 1],
-                    [0, 1, 2, 15],
-                    [0, 1, 2, 15, 14, 1],
-                    [0, 1, 2, 15],
-                    [0, 1, 2, 15, 15, 1],
-                    [0, 1, 2, 15],
-                    [0, 1, 2, 15, 16, 1],
-                    [0, 1, 2, 15],
-                    [0, 1, 2, 15, 17, 1],
-                    [0, 1, 2, 15],
-                    [0, 1, 2, 15, 18, 1],
-                    [0, 1, 2, 15],
-                ],
-            };
+        yield return new KeyPressTestCase()
+        {
+            TestName = "StreamDeck_EachKeyOnce",
+            Hardware = Hardware.StreamDeck.Internal(),
+            PackedInputReports =
+            [
+                [0, 1, 5, 1],
+                [0, 1],
+                [0, 1, 4, 1],
+                [0, 1],
+                [0, 1, 3, 1],
+                [0, 1],
+                [0, 1, 2, 1],
+                [0, 1],
+                [0, 1, 1, 1],
+                [0, 1],
+                [0, 1, 10, 1],
+                [0, 1],
+                [0, 1, 9, 1],
+                [0, 1],
+                [0, 1, 8, 1],
+                [0, 1],
+                [0, 1, 7, 1],
+                [0, 1],
+                [0, 1, 6, 1],
+                [0, 1],
+                [0, 1, 15, 1],
+                [0, 1],
+                [0, 1, 14, 1],
+                [0, 1],
+                [0, 1, 13, 1],
+                [0, 1],
+                [0, 1, 12, 1],
+                [0, 1],
+                [0, 1, 11, 1],
+                [0, 1],
+            ],
+        };
 
-            yield return new KeyPressTestCase()
-            {
-                TestName = "StreamDeckMK2_MultipleKeysDown",
-                Hardware = Hardware.StreamDeckMK2.Internal(),
-                PackedInputReports =
-                [
-                    [0, 1, 2, 15, 4, 1, 5, 1],
-                    [0, 1, 2, 15, 4, 1, 5, 1, 6, 1],
-                    [0, 1, 2, 15, 4, 1, 5, 1],
-                    [0, 1, 2, 15, 4, 1],
-                    [0, 1, 2, 15],
-                    [0, 1, 2, 15, 4, 1],
-                    [0, 1, 2, 15, 4, 1, 5, 1],
-                    [0, 1, 2, 15, 4, 1, 5, 1, 6, 1],
-                    [0, 1, 2, 15, 5, 1, 6, 1],
-                    [0, 1, 2, 15, 6, 1],
-                    [0, 1, 2, 15],
-                ],
-            };
+        yield return new KeyPressTestCase()
+        {
+            TestName = "StreamDeck_MultipleKeysDown",
+            Hardware = Hardware.StreamDeck.Internal(),
+            PackedInputReports =
+            [
+                [0, 1, 4, 1, 5, 1],
+                [0, 1, 3, 1, 4, 1, 5, 1],
+                [0, 1, 4, 1, 5, 1],
+                [0, 1, 5, 1],
+                [0, 1],
+                [0, 1, 5, 1],
+                [0, 1, 4, 1, 5, 1],
+                [0, 1, 3, 1, 4, 1, 5, 1],
+                [0, 1, 3, 1, 4, 1],
+                [0, 1, 3, 1],
+                [0, 1],
+            ],
+        };
 
-            yield return new KeyPressTestCase()
-            {
-                TestName = "StreamDeck_EachKeyOnce",
-                Hardware = Hardware.StreamDeck.Internal(),
-                PackedInputReports =
-                [
-                    [0, 1, 5, 1],
-                    [0, 1],
-                    [0, 1, 4, 1],
-                    [0, 1],
-                    [0, 1, 3, 1],
-                    [0, 1],
-                    [0, 1, 2, 1],
-                    [0, 1],
-                    [0, 1, 1, 1],
-                    [0, 1],
-                    [0, 1, 10, 1],
-                    [0, 1],
-                    [0, 1, 9, 1],
-                    [0, 1],
-                    [0, 1, 8, 1],
-                    [0, 1],
-                    [0, 1, 7, 1],
-                    [0, 1],
-                    [0, 1, 6, 1],
-                    [0, 1],
-                    [0, 1, 15, 1],
-                    [0, 1],
-                    [0, 1, 14, 1],
-                    [0, 1],
-                    [0, 1, 13, 1],
-                    [0, 1],
-                    [0, 1, 12, 1],
-                    [0, 1],
-                    [0, 1, 11, 1],
-                    [0, 1],
-                ],
-            };
+        yield return new KeyPressTestCase()
+        {
+            TestName = "StreamDeckMini_EachKeyOnce",
+            Hardware = Hardware.StreamDeckMini.Internal(),
+            PackedInputReports =
+            [
+                [0, 1],
+                [0, 1, 2, 1],
+                [0, 1],
+                [0, 1, 3, 1],
+                [0, 1],
+                [0, 1, 4, 1],
+                [0, 1],
+                [0, 1, 5, 1],
+                [0, 1],
+                [0, 1, 6, 1],
+                [0, 1],
+            ],
+        };
 
-            yield return new KeyPressTestCase()
-            {
-                TestName = "StreamDeck_MultipleKeysDown",
-                Hardware = Hardware.StreamDeck.Internal(),
-                PackedInputReports =
-                [
-                    [0, 1, 4, 1, 5, 1],
-                    [0, 1, 3, 1, 4, 1, 5, 1],
-                    [0, 1, 4, 1, 5, 1],
-                    [0, 1, 5, 1],
-                    [0, 1],
-                    [0, 1, 5, 1],
-                    [0, 1, 4, 1, 5, 1],
-                    [0, 1, 3, 1, 4, 1, 5, 1],
-                    [0, 1, 3, 1, 4, 1],
-                    [0, 1, 3, 1],
-                    [0, 1],
-                ],
-            };
+        yield return new KeyPressTestCase()
+        {
+            TestName = "StreamDeckMini_MultipleKeysDown",
+            Hardware = Hardware.StreamDeckMini.Internal(),
+            PackedInputReports =
+            [
+                [0, 1, 1, 1, 2, 1],
+                [0, 1, 1, 1, 2, 1, 3, 1],
+                [0, 1, 1, 1, 2, 1],
+                [0, 1, 1, 1],
+                [0, 1],
+                [0, 1, 1, 1],
+                [0, 1, 1, 1, 2, 1],
+                [0, 1, 1, 1, 2, 1, 3, 1],
+                [0, 1, 2, 1, 3, 1],
+                [0, 1, 3, 1],
+                [0, 1],
+            ],
+        };
+    }
 
-            yield return new KeyPressTestCase()
-            {
-                TestName = "StreamDeckMini_EachKeyOnce",
-                Hardware = Hardware.StreamDeckMini.Internal(),
-                PackedInputReports =
-                [
-                    [0, 1],
-                    [0, 1, 2, 1],
-                    [0, 1],
-                    [0, 1, 3, 1],
-                    [0, 1],
-                    [0, 1, 4, 1],
-                    [0, 1],
-                    [0, 1, 5, 1],
-                    [0, 1],
-                    [0, 1, 6, 1],
-                    [0, 1],
-                ],
-            };
+    private static IEnumerable<byte[]> Unpack(IEnumerable<byte[]> packedReports, int reportSize)
+    {
+        return packedReports.Select(x => Unpack(x, reportSize));
+    }
 
-            yield return new KeyPressTestCase()
-            {
-                TestName = "StreamDeckMini_MultipleKeysDown",
-                Hardware = Hardware.StreamDeckMini.Internal(),
-                PackedInputReports =
-                [
-                    [0, 1, 1, 1, 2, 1],
-                    [0, 1, 1, 1, 2, 1, 3, 1],
-                    [0, 1, 1, 1, 2, 1],
-                    [0, 1, 1, 1],
-                    [0, 1],
-                    [0, 1, 1, 1],
-                    [0, 1, 1, 1, 2, 1],
-                    [0, 1, 1, 1, 2, 1, 3, 1],
-                    [0, 1, 2, 1, 3, 1],
-                    [0, 1, 3, 1],
-                    [0, 1],
-                ],
-            };
+    private static byte[] Unpack(byte[] packedReport, int reportSize)
+    {
+        var unpacked = new byte[reportSize];
+
+        for (int i = 0; i < packedReport.Length; i += 2)
+        {
+            unpacked[packedReport[i]] = packedReport[i + 1];
         }
 
-        private static IEnumerable<byte[]> Unpack(IEnumerable<byte[]> packedReports, int reportSize)
-        {
-            return packedReports.Select(x => Unpack(x, reportSize));
-        }
+        return unpacked;
+    }
 
-        private static byte[] Unpack(byte[] packedReport, int reportSize)
-        {
-            var unpacked = new byte[reportSize];
-
-            for (int i = 0; i < packedReport.Length; i += 2)
-            {
-                unpacked[packedReport[i]] = packedReport[i + 1];
-            }
-
-            return unpacked;
-        }
-
-        public class KeyPressTestCase
-        {
-            public string TestName { get; set; }
-            public IEnumerable<byte[]> PackedInputReports { get; set; }
-            public IUsbHidHardware Hardware { get; set; }
-        }
+    public class KeyPressTestCase
+    {
+        public string TestName { get; set; }
+        public IEnumerable<byte[]> PackedInputReports { get; set; }
+        public IUsbHidHardware Hardware { get; set; }
     }
 }

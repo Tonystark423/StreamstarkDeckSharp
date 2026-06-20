@@ -1,20 +1,19 @@
-﻿using OpenMacroBoard.SDK;
+using OpenMacroBoard.SDK;
 
-namespace StreamDeckSharp
+namespace StreamDeckSharp;
+
+/// <summary>
+/// A compact collection of hardware specific information about a device.
+/// </summary>
+public interface IHardware
 {
     /// <summary>
-    /// A compact collection of hardware specific information about a device.
+    /// Key layout information
     /// </summary>
-    public interface IHardware
-    {
-        /// <summary>
-        /// Key layout information
-        /// </summary>
-        GridKeyLayout Keys { get; }
+    GridKeyLayout Keys { get; }
 
-        /// <summary>
-        /// Name of the device
-        /// </summary>
-        string DeviceName { get; }
-    }
+    /// <summary>
+    /// Name of the device
+    /// </summary>
+    string DeviceName { get; }
 }

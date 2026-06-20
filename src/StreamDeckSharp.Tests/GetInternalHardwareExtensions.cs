@@ -1,18 +1,17 @@
-﻿using StreamDeckSharp.Internals;
+using StreamDeckSharp.Internals;
 using System;
 
-namespace StreamDeckSharp.Tests
-{
-    internal static class GetInternalHardwareExtensions
-    {
-        public static UsbHardwareIdAndDriver Internal(this IUsbHidHardware hardware)
-        {
-            if (hardware is not UsbHardwareIdAndDriver result)
-            {
-                throw new InvalidOperationException("Failed to cast to internal hardware.");
-            }
+namespace StreamDeckSharp.Tests;
 
-            return result;
+internal static class GetInternalHardwareExtensions
+{
+    public static UsbHardwareIdAndDriver Internal(this IUsbHidHardware hardware)
+    {
+        if (hardware is not UsbHardwareIdAndDriver result)
+        {
+            throw new InvalidOperationException("Failed to cast to internal hardware.");
         }
+
+        return result;
     }
 }

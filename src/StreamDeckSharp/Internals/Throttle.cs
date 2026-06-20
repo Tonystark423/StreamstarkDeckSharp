@@ -1,45 +1,44 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Threading;
 
 #pragma warning disable AV1710 // Member name includes the name of its containing type
 
-namespace StreamDeckSharp.Internals
+namespace StreamDeckSharp.Internals;
+
+internal class Throttle
 {
-    internal class Throttle
+    private readonly Stopwatch stopwatch = Stopwatch.StartNew();
+    private long sumBytesInWindow = 0;
+    private int sleepCount = 0;
+
+    public double BytesPerSecondLimit { get; set; } = double.PositiveInfinity;
+    public int ByteCountBeforeThrottle { get; set; } = 16_000;
+
+    public void MeasureAndBlock(int bytes)
     {
-        private readonly Stopwatch stopwatch = Stopwatch.StartNew();
-        private long sumBytesInWindow = 0;
-        private int sleepCount = 0;
+        sumBytesInWindow += bytes;
 
-        public double BytesPerSecondLimit { get; set; } = double.PositiveInfinity;
-        public int ByteCountBeforeThrottle { get; set; } = 16_000;
+        var elapsedSeconds = stopwatch.Elapsed.TotalSeconds;
+        var estimatedSeconds = sumBytesInWindow / BytesPerSecondLimit;
 
-        public void MeasureAndBlock(int bytes)
+        if (sumBytesInWindow > ByteCountBeforeThrottle && elapsedSeconds < estimatedSeconds)
         {
-            sumBytesInWindow += bytes;
+            var delta = Math.Max(1, (int)((estimatedSeconds - elapsedSeconds) * 1000));
+            Thread.Sleep(delta);
+            sleepCount++;
+        }
 
-            var elapsedSeconds = stopwatch.Elapsed.TotalSeconds;
-            var estimatedSeconds = sumBytesInWindow / BytesPerSecondLimit;
-
-            if (sumBytesInWindow > ByteCountBeforeThrottle && elapsedSeconds < estimatedSeconds)
+        if (elapsedSeconds >= 1)
+        {
+            if (sleepCount > 1)
             {
-                var delta = Math.Max(1, (int)((estimatedSeconds - elapsedSeconds) * 1000));
-                Thread.Sleep(delta);
-                sleepCount++;
+                Debug.WriteLine($"[Throttle] {sumBytesInWindow / elapsedSeconds}");
             }
 
-            if (elapsedSeconds >= 1)
-            {
-                if (sleepCount > 1)
-                {
-                    Debug.WriteLine($"[Throttle] {sumBytesInWindow / elapsedSeconds}");
-                }
-
-                stopwatch.Restart();
-                sumBytesInWindow = 0;
-                sleepCount = 0;
-            }
+            stopwatch.Restart();
+            sumBytesInWindow = 0;
+            sleepCount = 0;
         }
     }
 }

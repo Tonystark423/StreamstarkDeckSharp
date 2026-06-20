@@ -4,26 +4,25 @@ using StreamDeckSharp.Internals;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace StreamDeckSharp.Tests
+namespace StreamDeckSharp.Tests;
+
+public class StreamDeckIoHardwareTwins
 {
-    public class StreamDeckIoHardwareTwins
+    public ExtendedVerifySettings Verifier { get; } = DefaultVerifySettings.Build();
+
+    [Theory]
+    [ClassData(typeof(AllHardwareInfoTestData))]
+    internal async Task HardwareTwinsHaveExpectedValues(UsbHardwareIdAndDriver hardware)
     {
-        public ExtendedVerifySettings Verifier { get; } = DefaultVerifySettings.Build();
+        // This test is to make sure we don't accidentially change some important constants.
+        Verifier.Initialize();
 
-        [Theory]
-        [ClassData(typeof(AllHardwareInfoTestData))]
-        internal async Task HardwareTwinsHaveExpectedValues(UsbHardwareIdAndDriver hardware)
-        {
-            // This test is to make sure we don't accidentially change some important constants.
-            Verifier.Initialize();
+        Verifier
+            .UseFileNameAsDirectory()
+            .UseFileName(hardware.DeviceName)
+            ;
 
-            Verifier
-                .UseFileNameAsDirectory()
-                .UseFileName(hardware.DeviceName)
-                ;
-
-            var hardwareJson = JsonConvert.SerializeObject(hardware);
-            await Verifier.VerifyJsonAsync(hardwareJson);
-        }
+        var hardwareJson = JsonConvert.SerializeObject(hardware);
+        await Verifier.VerifyJsonAsync(hardwareJson);
     }
 }
