@@ -47,12 +47,12 @@ internal class BasicHidClient : IMacroBoard
 
     public string GetFirmwareVersion()
     {
-        return ReadFeatureString(HidComDriver.FirmwareVersionFeatureId, HidComDriver.FirmwareVersionReportSkip);
+        return ReadFeatureString(HidComDriver.FirmwareVersionFeatureId, HidComDriver.FirmwareVersionReportSkip) ?? string.Empty;
     }
 
     public string GetSerialNumber()
     {
-        return ReadFeatureString(HidComDriver.SerialNumberFeatureId, HidComDriver.SerialNumberReportSkip);
+        return ReadFeatureString(HidComDriver.SerialNumberFeatureId, HidComDriver.SerialNumberReportSkip) ?? string.Empty;
     }
 
     public void SetBrightness(byte percent)
@@ -127,7 +127,7 @@ internal class BasicHidClient : IMacroBoard
         }
     }
 
-    private string ReadFeatureString(byte featureId, int skipBytes)
+    private string? ReadFeatureString(byte featureId, int skipBytes)
     {
         if (!DeckHid.ReadFeatureData(featureId, out var featureData))
         {

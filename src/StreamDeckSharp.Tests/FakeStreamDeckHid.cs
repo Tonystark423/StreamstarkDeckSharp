@@ -13,8 +13,11 @@ internal sealed class FakeStreamDeckHid : IStreamDeckHid
 
     public FakeStreamDeckHid(TextWriter log, UsbHardwareIdAndDriver hardware)
     {
-        this.log = log ?? throw new ArgumentNullException(nameof(log));
-        this.hardware = hardware ?? throw new ArgumentNullException(nameof(hardware));
+        ArgumentNullException.ThrowIfNull(log);
+        ArgumentNullException.ThrowIfNull(hardware);
+
+        this.log = log;
+        this.hardware = hardware;
     }
 
     public event EventHandler<ReportReceivedEventArgs> ReportReceived;

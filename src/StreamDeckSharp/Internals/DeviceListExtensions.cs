@@ -13,10 +13,7 @@ internal static class DeviceListExtensions
         params IUsbHidHardware[] hardware
     )
     {
-        if (deviceList is null)
-        {
-            throw new ArgumentNullException(nameof(deviceList));
-        }
+        ArgumentNullException.ThrowIfNull(deviceList);
 
         var matchAllKnowDevices = hardware is null || hardware.Length < 1;
 

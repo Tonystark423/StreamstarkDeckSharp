@@ -62,17 +62,15 @@ internal sealed class StreamDeckHidWrapper : IStreamDeckHid
     private readonly Throttle throttle;
 
     private readonly IStreamDeckHidComDriver hardwareInfo;
-    private HidStream dStream;
+    private HidStream? dStream;
     private byte[] readReportBuffer;
 
     public StreamDeckHidWrapper(HidDevice device, IStreamDeckHidComDriver hardwareInfo)
     {
-        if (device is null)
-        {
-            throw new ArgumentNullException(nameof(device));
-        }
+        ArgumentNullException.ThrowIfNull(device);
+        ArgumentNullException.ThrowIfNull(hardwareInfo);
 
-        this.hardwareInfo = hardwareInfo ?? throw new ArgumentNullException(nameof(hardwareInfo));
+        this.hardwareInfo = hardwareInfo;
 
         if (hardwareInfo.BytesPerSecondLimit < double.PositiveInfinity)
         {
@@ -228,7 +226,7 @@ internal sealed class StreamDeckHidWrapper : IStreamDeckHid
         }
     }
 
-    private void Local_Changed(object sender, DeviceListChangedEventArgs e)
+    private void Local_Changed(object? sender, DeviceListChangedEventArgs e)
     {
         RefreshConnection();
     }

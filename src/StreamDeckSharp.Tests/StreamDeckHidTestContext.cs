@@ -8,7 +8,10 @@ internal sealed class StreamDeckHidTestContext : IDisposable
 {
     public StreamDeckHidTestContext(UsbHardwareIdAndDriver hardware)
     {
-        Hardware = hardware ?? throw new ArgumentNullException(nameof(hardware));
+        ArgumentNullException.ThrowIfNull(hardware);
+
+        Hardware = hardware;
+
         Log = new StringWriter();
         Hid = new FakeStreamDeckHid(Log, Hardware);
         Board = new BasicHidClient(Hid, Hardware.Keys, Hardware.Driver);

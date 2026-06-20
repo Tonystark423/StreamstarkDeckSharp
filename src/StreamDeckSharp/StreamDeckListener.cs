@@ -103,7 +103,9 @@ public sealed class StreamDeckListener :
     {
         public DeviceState(StreamDeckDeviceReference deviceReference, bool connected)
         {
-            DeviceReference = deviceReference ?? throw new ArgumentNullException(nameof(deviceReference));
+            ArgumentNullException.ThrowIfNull(deviceReference);
+
+            DeviceReference = deviceReference;
             Connected = connected;
         }
 
@@ -124,8 +126,11 @@ public sealed class StreamDeckListener :
 
         public Subscription(StreamDeckListener parent, IObserver<DeviceStateReport> observer)
         {
-            this.parent = parent ?? throw new ArgumentNullException(nameof(parent));
-            this.observer = observer ?? throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(parent);
+            ArgumentNullException.ThrowIfNull(observer);
+
+            this.parent = parent;
+            this.observer = observer;
         }
 
         public void SendUpdates()
