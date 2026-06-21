@@ -94,7 +94,7 @@ public sealed class StreamDeckListener :
         }
     }
 
-    private void DeviceListChanged(object sender, DeviceListChangedEventArgs e)
+    private void DeviceListChanged(object? sender, DeviceListChangedEventArgs e)
     {
         ProcessDelta();
     }

@@ -54,7 +54,7 @@ public sealed class StreamDeckDeviceReference : IDeviceReference
     }
 
     /// <inheritdoc/>
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj is null)
         {

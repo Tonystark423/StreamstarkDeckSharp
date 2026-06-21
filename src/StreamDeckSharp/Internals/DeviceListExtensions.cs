@@ -10,12 +10,10 @@ internal static class DeviceListExtensions
 {
     public static IEnumerable<StreamDeckDeviceReference> GetStreamDecks(
         this DeviceList deviceList,
-        params IUsbHidHardware[] hardware
+        params IUsbHidHardware[]? hardware
     )
     {
         ArgumentNullException.ThrowIfNull(deviceList);
-
-        var matchAllKnowDevices = hardware is null || hardware.Length < 1;
 
         (bool Success, UsbHardwareIdAndDriver Hardware) MatchingHardware(HidDevice d)
         {
@@ -23,10 +21,10 @@ internal static class DeviceListExtensions
 
             if (hwDetails is null)
             {
-                return (false, default);
+                return (false, default!);
             }
 
-            if (matchAllKnowDevices)
+            if (hardware is null || hardware.Length < 1)
             {
                 return (true, hwDetails);
             }
@@ -36,7 +34,7 @@ internal static class DeviceListExtensions
 
             return (
                 hardwareMatches,
-                hardwareMatches ? hwDetails : default
+                hardwareMatches ? hwDetails : default!
             );
         }
 
@@ -45,7 +43,7 @@ internal static class DeviceListExtensions
             .SelectWhere(device =>
             {
                 var (success, hardware) = MatchingHardware(device);
-                var value = success ? new { HardwareInfo = hardware, Device = device } : default;
+                var value = success ? new { HardwareInfo = hardware, Device = device } : default!;
 
                 return (success, value);
             })

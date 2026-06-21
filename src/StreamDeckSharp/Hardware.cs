@@ -195,7 +195,7 @@ public static class Hardware
         return RegisteredHardware.Values.Distinct().ToList();
     }
 
-    internal static UsbHardwareIdAndDriver GetInternalHardwareInfos(UsbVendorProductPair usbId)
+    internal static UsbHardwareIdAndDriver? GetInternalHardwareInfos(UsbVendorProductPair usbId)
     {
         if (RegisteredHardware.TryGetValue(usbId, out var hardwareInfo))
         {

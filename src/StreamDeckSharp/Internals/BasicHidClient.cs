@@ -28,8 +28,8 @@ internal class BasicHidClient : IMacroBoard
         keyStates = new byte[Keys.Count];
     }
 
-    public event EventHandler<KeyEventArgs> KeyStateChanged;
-    public event EventHandler<ConnectionEventArgs> ConnectionStateChanged;
+    public event EventHandler<KeyEventArgs>? KeyStateChanged;
+    public event EventHandler<ConnectionEventArgs>? ConnectionStateChanged;
 
     public IKeyLayout Keys { get; }
     public bool IsDisposed { get; private set; }
@@ -139,7 +139,7 @@ internal class BasicHidClient : IMacroBoard
         return Encoding.UTF8.GetString(featureData, skipBytes, featureData.Length - skipBytes).Trim('\0');
     }
 
-    private void DeckHid_ReportReceived(object sender, ReportReceivedEventArgs e)
+    private void DeckHid_ReportReceived(object? sender, ReportReceivedEventArgs e)
     {
         ProcessKeys(e.ReportData);
     }

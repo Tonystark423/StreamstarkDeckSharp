@@ -5,6 +5,7 @@ using System.Threading;
 namespace StreamDeckSharp.Internals;
 
 internal sealed class ConcurrentBufferedQueue<TKey, TValue> : IDisposable
+    where TKey : notnull
 {
     private readonly object sync = new();
 
@@ -74,7 +75,7 @@ internal sealed class ConcurrentBufferedQueue<TKey, TValue> : IDisposable
 
                 if (isAddingCompleted)
                 {
-                    return (false, default, default);
+                    return (false, default!, default!);
                 }
 
                 Monitor.Wait(sync);

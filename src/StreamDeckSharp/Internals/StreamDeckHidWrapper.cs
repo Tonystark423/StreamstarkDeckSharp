@@ -59,11 +59,11 @@ internal sealed class StreamDeckHidWrapper : IStreamDeckHid
     /// other devices that work as expected we set <see cref="double.PositiveInfinity"/> (unlimited).
     /// </para>
     /// </remarks>
-    private readonly Throttle throttle;
+    private readonly Throttle? throttle;
 
     private readonly IStreamDeckHidComDriver hardwareInfo;
     private HidStream? dStream;
-    private byte[] readReportBuffer;
+    private byte[] readReportBuffer = null!;
 
     public StreamDeckHidWrapper(HidDevice device, IStreamDeckHidComDriver hardwareInfo)
     {
@@ -84,8 +84,8 @@ internal sealed class StreamDeckHidWrapper : IStreamDeckHid
         OpenConnection(device);
     }
 
-    public event EventHandler<ConnectionEventArgs> ConnectionStateChanged;
-    public event EventHandler<ReportReceivedEventArgs> ReportReceived;
+    public event EventHandler<ConnectionEventArgs>? ConnectionStateChanged;
+    public event EventHandler<ReportReceivedEventArgs>? ReportReceived;
 
     public int OutputReportLength { get; private set; }
     public int FeatureReportLength { get; private set; }
@@ -275,7 +275,7 @@ internal sealed class StreamDeckHidWrapper : IStreamDeckHid
         }
         else
         {
-            OpenConnection(device);
+            OpenConnection(device!);
         }
     }
 
@@ -300,7 +300,7 @@ internal sealed class StreamDeckHidWrapper : IStreamDeckHid
 
     private void ReadReportCallback(IAsyncResult ar)
     {
-        var stream = (HidStream)ar.AsyncState;
+        var stream = ar.AsyncState as HidStream ?? throw new InvalidOperationException();
 
         try
         {
