@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace StreamDeckSharp.Internals
 {
@@ -27,7 +28,8 @@ namespace StreamDeckSharp.Internals
         /// JPEG instead of BMP and the Hid.Write probably also blocks as long as the device is busy.
         /// </para>
         /// <para>
-        /// The limit was determined by the following measurements with a classical stream deck:</para>
+        /// The limit was determined by the following measurements with a classical stream deck:
+        /// </para>
         /// <para>
         /// write speed -> time between glitches<br/>
         /// 3.90 MiB/s -> 1.7s<br/>
@@ -63,6 +65,7 @@ namespace StreamDeckSharp.Internals
         private readonly IStreamDeckHidComDriver hardwareInfo;
         private HidStream dStream;
         private byte[] readReportBuffer;
+        private bool _disposed;
 
         public StreamDeckHidWrapper(HidDevice device, IStreamDeckHidComDriver hardwareInfo)
         {
@@ -93,9 +96,29 @@ namespace StreamDeckSharp.Internals
 
         public bool IsConnected => dStream != null;
 
+        /// <summary>
+        /// Gets a value indicating whether the object has been disposed.
+        /// </summary>
+        public bool IsDisposed => _disposed;
+
+        /// <summary>
+        /// Disposes the HID wrapper and releases all resources.
+        /// </summary>
         public void Dispose()
         {
-            DisposeConnection();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Asynchronously disposes the HID wrapper and releases all resources.
+        /// </summary>
+        /// <returns>A ValueTask representing the asynchronous disposal operation.</returns>
+        public async ValueTask DisposeAsync()
+        {
+            await DisposeAsyncCore().ConfigureAwait(false);
+            Dispose(false);
+            GC.SuppressFinalize(this);
         }
 
         public bool ReadFeatureData(byte id, out byte[] data)
@@ -292,6 +315,47 @@ namespace StreamDeckSharp.Internals
 
             dStreamRefCopy.Dispose();
             ConnectionStateChanged?.Invoke(this, new ConnectionEventArgs(false));
+        }
+
+        /// <summary>
+        /// Asynchronously performs cleanup operations.
+        /// </summary>
+        /// <returns>A ValueTask representing the asynchronous cleanup.</returns>
+        private async ValueTask DisposeAsyncCore()
+        {
+            // Unsubscribe from device list changes
+            DeviceList.Local.Changed -= Local_Changed;
+
+            // Dispose the connection asynchronously
+            await Task.Run(() => DisposeConnection()).ConfigureAwait(false);
+
+            // Clear references
+            readReportBuffer = null;
+        }
+
+        /// <summary>
+        /// Performs cleanup operations.
+        /// </summary>
+        /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
+        private void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            _disposed = true;
+
+            if (disposing)
+            {
+                // Unsubscribe from device list changes
+                DeviceList.Local.Changed -= Local_Changed;
+
+                DisposeConnection();
+
+                // Clear references
+                readReportBuffer = null;
+            }
         }
 
         private void BeginWaitRead(HidStream stream)

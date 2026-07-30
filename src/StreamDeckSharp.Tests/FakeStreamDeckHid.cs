@@ -3,6 +3,7 @@ using StreamDeckSharp.Internals;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace StreamDeckSharp.Tests
 {
@@ -10,6 +11,7 @@ namespace StreamDeckSharp.Tests
     {
         private readonly TextWriter log;
         private readonly UsbHardwareIdAndDriver hardware;
+        private bool _disposed;
 
         public FakeStreamDeckHid(TextWriter log, UsbHardwareIdAndDriver hardware)
         {
@@ -20,7 +22,8 @@ namespace StreamDeckSharp.Tests
         public event EventHandler<ReportReceivedEventArgs> ReportReceived;
         public event EventHandler<ConnectionEventArgs> ConnectionStateChanged;
 
-        public bool IsConnected => throw new NotImplementedException();
+        public bool IsConnected => !_disposed;
+        public bool IsDisposed => _disposed;
         public int OutputReportLength => hardware.Driver.ExpectedOutputReportLength;
 
         public int BytesPerLineOutput { get; set; } = 16;
@@ -45,7 +48,24 @@ namespace StreamDeckSharp.Tests
 
         public void Dispose()
         {
+            if (_disposed)
+            {
+                return;
+            }
+
+            _disposed = true;
             log.WriteLine("Dispose()");
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            _disposed = true;
+            await Task.Run(() => log.WriteLine("DisposeAsync()")).ConfigureAwait(false);
         }
 
         public bool ReadFeatureData(byte id, out byte[] data)

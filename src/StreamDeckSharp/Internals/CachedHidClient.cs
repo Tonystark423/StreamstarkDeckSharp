@@ -1,11 +1,12 @@
 using OpenMacroBoard.SDK;
+using StreamDeckSharp;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace StreamDeckSharp.Internals
 {
-    internal class CachedHidClient : BasicHidClient
+    internal class CachedHidClient : BasicHidClient, IStreamDeck
     {
         private readonly Task writerTask;
         private readonly ConcurrentBufferedQueue<int, byte[]> imageQueue;
@@ -31,16 +32,62 @@ namespace StreamDeckSharp.Internals
             imageQueue.Add(keyId, payload);
         }
 
+        /// <summary>
+        /// Asynchronously disposes the cached HID client, waiting for pending operations to complete.
+        /// </summary>
+        /// <returns>A ValueTask representing the asynchronous disposal operation.</returns>
+        protected override async ValueTask DisposeAsyncCore()
+        {
+            // Signal the image queue to stop accepting new items
+            imageQueue.CompleteAdding();
+
+            // Wait for the writer task to complete asynchronously
+            // This ensures all pending bitmap writes are flushed before disposal
+            try
+            {
+                await writerTask.ConfigureAwait(false);
+            }
+            catch
+            {
+                // Suppress exceptions during disposal
+            }
+
+            // Dispose the image queue
+            imageQueue.Dispose();
+
+            // Call base async disposal
+            await base.DisposeAsyncCore().ConfigureAwait(false);
+        }
+
         protected override void Shutdown()
         {
             imageQueue.CompleteAdding();
-            writerTask.Wait();
+
+            // Wait for the writer task to complete synchronously
+            // This is called from the synchronous Dispose path
+            try
+            {
+                writerTask?.Wait();
+            }
+            catch
+            {
+                // Suppress exceptions during disposal
+            }
         }
 
         protected override void Dispose(bool disposing)
         {
+            if (Disposed)
+            {
+                return;
+            }
+
             base.Dispose(disposing);
-            imageQueue.Dispose();
+
+            if (disposing)
+            {
+                imageQueue.Dispose();
+            }
         }
 
         private Task StartBitmapWriterTask()

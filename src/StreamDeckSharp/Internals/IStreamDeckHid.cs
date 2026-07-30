@@ -1,10 +1,11 @@
-﻿using OpenMacroBoard.SDK;
+using OpenMacroBoard.SDK;
 using System;
+using System.Threading.Tasks;
 
 namespace StreamDeckSharp.Internals
 {
     internal interface IStreamDeckHid
-        : IDisposable
+        : IDisposable, IAsyncDisposable
     {
         event EventHandler<ReportReceivedEventArgs> ReportReceived;
         event EventHandler<ConnectionEventArgs> ConnectionStateChanged;

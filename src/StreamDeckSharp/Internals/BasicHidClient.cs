@@ -1,14 +1,17 @@
 using OpenMacroBoard.SDK;
+using StreamDeckSharp;
 using System;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace StreamDeckSharp.Internals
 {
-    internal class BasicHidClient : IMacroBoard
+    internal class BasicHidClient : IStreamDeck
     {
         private readonly byte[] keyStates;
         private readonly object disposeLock = new();
+        private bool _disposed;
 
         public BasicHidClient(
             IStreamDeckHid deckHid,
@@ -31,26 +34,42 @@ namespace StreamDeckSharp.Internals
         public event EventHandler<ConnectionEventArgs> ConnectionStateChanged;
 
         public IKeyLayout Keys { get; }
-        public bool IsDisposed { get; private set; }
+        public bool IsDisposed => _disposed;
         public bool IsConnected => DeckHid.IsConnected;
 
         protected IStreamDeckHid DeckHid { get; }
         protected IStreamDeckHidComDriver HidComDriver { get; }
         protected byte[] Buffer { get; }
 
+        /// <summary>
+        /// Disposes the Stream Deck client and releases all resources.
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Asynchronously disposes the Stream Deck client and releases all resources.
+        /// </summary>
+        /// <returns>A ValueTask representing the asynchronous disposal operation.</returns>
+        public async ValueTask DisposeAsync()
+        {
+            await DisposeAsyncCore().ConfigureAwait(false);
+            Dispose(false);
+            GC.SuppressFinalize(this);
+        }
+
         public string GetFirmwareVersion()
         {
+            ThrowIfAlreadyDisposed();
             return ReadFeatureString(HidComDriver.FirmwareVersionFeatureId, HidComDriver.FirmwareVersionReportSkip);
         }
 
         public string GetSerialNumber()
         {
+            ThrowIfAlreadyDisposed();
             return ReadFeatureString(HidComDriver.SerialNumberFeatureId, HidComDriver.SerialNumberReportSkip);
         }
 
@@ -62,6 +81,7 @@ namespace StreamDeckSharp.Internals
 
         public virtual void SetKeyBitmap(int keyId, KeyBitmap bitmapData)
         {
+            ThrowIfAlreadyDisposed();
             keyId = HidComDriver.ExtKeyIdToHardwareKeyId(keyId);
 
             var payload = HidComDriver.GeneratePayload(bitmapData);
@@ -87,22 +107,47 @@ namespace StreamDeckSharp.Internals
             ShowLogoWithoutDisposeVerification();
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the object has been disposed.
+        /// </summary>
+        protected bool Disposed => _disposed;
+
         protected virtual void Shutdown()
         {
         }
 
+        /// <summary>
+        /// Asynchronously performs cleanup operations.
+        /// </summary>
+        /// <returns>A ValueTask representing the asynchronous cleanup.</returns>
+        protected virtual async ValueTask DisposeAsyncCore()
+        {
+            // Default implementation does nothing asynchronously
+            // Derived classes can override to add async cleanup
+            await Task.CompletedTask.ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Performs cleanup operations.
+        /// </summary>
+        /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
         protected virtual void Dispose(bool disposing)
         {
+            if (_disposed)
+            {
+                return;
+            }
+
             if (disposing)
             {
                 lock (disposeLock)
                 {
-                    if (IsDisposed)
+                    if (_disposed)
                     {
                         return;
                     }
 
-                    IsDisposed = true;
+                    _disposed = true;
                 }
 
                 Shutdown();
@@ -120,7 +165,7 @@ namespace StreamDeckSharp.Internals
 
         protected void ThrowIfAlreadyDisposed()
         {
-            if (IsDisposed)
+            if (_disposed)
             {
                 throw new ObjectDisposedException(nameof(BasicHidClient));
             }
